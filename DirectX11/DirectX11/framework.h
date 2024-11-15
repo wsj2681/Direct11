@@ -9,7 +9,27 @@
 // Windows 헤더 파일
 #include <windows.h>
 // C 런타임 헤더 파일입니다.
+#include <stdio.h>
 #include <stdlib.h>
 #include <malloc.h>
 #include <memory.h>
 #include <tchar.h>
+
+#include <d3d11.h>
+#include <d3dcompiler.h>
+#include <DirectXMath.h>
+#include <dxgi1_6.h>
+#include <wrl/client.h>
+#include <cstdint>
+#include <stdexcept>
+#include <iostream>
+using namespace std;
+using namespace DirectX;
+using Microsoft::WRL::ComPtr;
+
+#pragma comment(lib,"d3dcompiler.lib")
+#pragma comment(lib,"d3d11.lib")
+#pragma comment(lib,"dxgi.lib")
+
+#define FRAMEBUFFER_WIDTH 800
+#define FRAMEBUFFER_HEIGHT 600
