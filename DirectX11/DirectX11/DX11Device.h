@@ -30,10 +30,18 @@ private:
     ComPtr<ID3D11VertexShader> trianglevertexShader;
     ComPtr<ID3D11PixelShader> trianglepixelShader;
     ComPtr<ID3D11InputLayout> triangleinputLayout;
+
+    ComPtr<ID3D11Buffer> rectVertexBuffer;
+    ComPtr<ID3D11Buffer> rectIndexBuffer;
+    ComPtr<ID3D11VertexShader> rectvertexShader;
+    ComPtr<ID3D11PixelShader> rectpixelShader;
+    ComPtr<ID3D11InputLayout> rectinputLayout;
+
 public:
 
 	void Initialize(HWND hWnd);
     void CreateTriangle();
+    void CreateRectangle();
     void Render();
 
 };
