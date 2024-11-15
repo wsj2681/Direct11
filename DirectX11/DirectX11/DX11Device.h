@@ -25,19 +25,7 @@ private:
 	ComPtr<ID3D11DeviceContext> devcon;
 	ComPtr<IDXGISwapChain> swapchain;
     ComPtr<ID3D11RenderTargetView> rtv;
-
-    ComPtr<ID3D11Buffer> triangleVertexBuffer;
-    ComPtr<ID3D11Buffer> triangleIndexBuffer;
-    ComPtr<ID3D11VertexShader> trianglevertexShader;
-    ComPtr<ID3D11PixelShader> trianglepixelShader;
-    ComPtr<ID3D11InputLayout> triangleinputLayout;
-
-    ComPtr<ID3D11Buffer> rectVertexBuffer;
-    ComPtr<ID3D11Buffer> rectIndexBuffer;
-    ComPtr<ID3D11VertexShader> rectvertexShader;
-    ComPtr<ID3D11PixelShader> rectpixelShader;
-    ComPtr<ID3D11InputLayout> rectinputLayout;
-
+    ComPtr<ID3D11DepthStencilView> dsv;
     unique_ptr<CPolygon> polygon;
 
 public:

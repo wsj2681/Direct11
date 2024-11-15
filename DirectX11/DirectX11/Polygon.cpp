@@ -11,7 +11,7 @@ CPolygon::CPolygon(ComPtr<ID3D11Device>& device, UINT vertexCount)
 	for (int i = 0; i < vertexCount; ++i)
 	{
 		float angle = i * angleIncrement;
-		vertices.at(i) = { {radius * sin(angle), radius * cos(angle), 0.f}, {1.0f, 0.0f, 0.0f, 1.0f} };;
+		vertices.at(i) = { {radius * sin(angle), radius * cos(angle), 0.f}, {1.0f, 0.0f, 0.0f, 1.0f} };
 	}
 
 	// Create Index
@@ -48,14 +48,17 @@ CPolygon::CPolygon(ComPtr<ID3D11Device>& device, UINT vertexCount)
 
 	HR(device->CreateBuffer(&bufferdesc, &initdata, indexBuffer.GetAddressOf()));
 
+	// Vertex Shader
 	ComPtr<ID3DBlob> vsBlob;
 	HR(D3DCompileFromFile(L"triangleShader.hlsl", nullptr, nullptr, "VSMain", "vs_5_0", 0, 0, vsBlob.GetAddressOf(), nullptr));
 	HR(device->CreateVertexShader(vsBlob->GetBufferPointer(), vsBlob->GetBufferSize(), nullptr, vertexShader.GetAddressOf()));
 
+	// Pixel Shader
 	ComPtr<ID3DBlob> psBlob;
 	HR(D3DCompileFromFile(L"triangleShader.hlsl", nullptr, nullptr, "PSMain", "ps_5_0", 0, 0, psBlob.GetAddressOf(), nullptr));
 	HR(device->CreatePixelShader(psBlob->GetBufferPointer(), psBlob->GetBufferSize(), nullptr, pixelShader.GetAddressOf()));
 
+	// Input Layout
 	D3D11_INPUT_ELEMENT_DESC layout[] =
 	{
 		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
@@ -67,7 +70,6 @@ CPolygon::CPolygon(ComPtr<ID3D11Device>& device, UINT vertexCount)
 
 void CPolygon::Render(ComPtr<ID3D11DeviceContext>& devcon)
 {
-	//Render Rectangle
 	devcon->IASetInputLayout(inputLayout.Get());
 	devcon->VSSetShader(vertexShader.Get(), nullptr, 0);
 	devcon->PSSetShader(pixelShader.Get(), nullptr, 0);
@@ -78,6 +80,5 @@ void CPolygon::Render(ComPtr<ID3D11DeviceContext>& devcon)
 	devcon->IASetIndexBuffer(indexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
 
 	devcon->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	//devcon->Draw(3, 0);
 	devcon->DrawIndexed(indexCount, 0, 0);
 }

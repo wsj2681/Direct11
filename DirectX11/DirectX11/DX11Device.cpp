@@ -42,7 +42,21 @@ void DX11Device::Initialize(HWND hWnd)
 	HR(swapchain->GetBuffer(0, __uuidof(ID3D11Texture2D), reinterpret_cast<void**>(backBuffer.GetAddressOf())));
 	HR(device->CreateRenderTargetView(backBuffer.Get(), nullptr, rtv.GetAddressOf()));
 
-	devcon->OMSetRenderTargets(1, rtv.GetAddressOf(), nullptr);
+	D3D11_TEXTURE2D_DESC depthStencildesc = {};
+	depthStencildesc.Width = FRAMEBUFFER_WIDTH;
+	depthStencildesc.Height = FRAMEBUFFER_HEIGHT;
+	depthStencildesc.MipLevels = 1;
+	depthStencildesc.ArraySize = 1;
+	depthStencildesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+	depthStencildesc.SampleDesc.Count = 1;
+	depthStencildesc.Usage = D3D11_USAGE_DEFAULT;
+	depthStencildesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+
+	ComPtr<ID3D11Texture2D> depthStencilBuffer;
+	HR(device->CreateTexture2D(&depthStencildesc, nullptr, depthStencilBuffer.GetAddressOf()));
+	HR(device->CreateDepthStencilView(depthStencilBuffer.Get(), nullptr, dsv.GetAddressOf()));
+
+	devcon->OMSetRenderTargets(1, rtv.GetAddressOf(), dsv.Get());
 
 	D3D11_VIEWPORT viewport = {};
 	viewport.TopLeftX = 0;
@@ -59,6 +73,7 @@ void DX11Device::Render()
 {
 	float clearColor[4] = { 0.f, 0.f, 0.4f, 1.f };
 	devcon->ClearRenderTargetView(rtv.Get(), clearColor);
+	devcon->ClearDepthStencilView(dsv.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 
 	if (polygon)
 	{
