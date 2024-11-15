@@ -71,6 +71,9 @@ void DX11Device::CreateTriangle()
 		XMFLOAT3(-0.5f, -0.5f, 0.0f), XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f),
 	};
 
+	UINT indices[] = { 0, 1, 2 };
+
+	// Vertex Buffer
 	D3D11_BUFFER_DESC bufferdesc= {};
 	bufferdesc.Usage = D3D11_USAGE_DEFAULT;
 	bufferdesc.ByteWidth = sizeof(vertices);
@@ -80,7 +83,15 @@ void DX11Device::CreateTriangle()
 	D3D11_SUBRESOURCE_DATA initdata = {};
 	initdata.pSysMem = vertices;
 
-	HR(device->CreateBuffer(&bufferdesc, &initdata, triangleBuffer.GetAddressOf()));
+	HR(device->CreateBuffer(&bufferdesc, &initdata, triangleVertexBuffer.GetAddressOf()));
+
+	// Index Buffer
+	bufferdesc.ByteWidth = sizeof(indices);
+	bufferdesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
+	
+	initdata.pSysMem = indices;
+
+	HR(device->CreateBuffer(&bufferdesc, &initdata, triangleIndexBuffer.GetAddressOf()));
 
 	ComPtr<ID3DBlob> vsBlob;
 	HR(D3DCompileFromFile(L"triangleShader.hlsl", nullptr, nullptr, "VSMain", "vs_5_0", 0, 0, vsBlob.GetAddressOf(), nullptr));
@@ -111,9 +122,12 @@ void DX11Device::Render()
 
 	UINT stride = sizeof(Vertex);
 	UINT offset = 0;
-	devcon->IASetVertexBuffers(0, 1, triangleBuffer.GetAddressOf(), &stride, &offset);
+	devcon->IASetVertexBuffers(0, 1, triangleVertexBuffer.GetAddressOf(), &stride, &offset);
+	devcon->IASetIndexBuffer(triangleIndexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
+
 	devcon->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	devcon->Draw(3, 0);
+	//devcon->Draw(3, 0);
+	devcon->DrawIndexed(3, 0, 0);
 
 	swapchain->Present(1, 0);
 }

@@ -25,7 +25,8 @@ private:
 	ComPtr<IDXGISwapChain> swapchain;
     ComPtr<ID3D11RenderTargetView> rtv;
 
-    ComPtr<ID3D11Buffer> triangleBuffer;
+    ComPtr<ID3D11Buffer> triangleVertexBuffer;
+    ComPtr<ID3D11Buffer> triangleIndexBuffer;
     ComPtr<ID3D11VertexShader> trianglevertexShader;
     ComPtr<ID3D11PixelShader> trianglepixelShader;
     ComPtr<ID3D11InputLayout> triangleinputLayout;
