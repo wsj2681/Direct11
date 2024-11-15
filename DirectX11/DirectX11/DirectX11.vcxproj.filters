@@ -9,33 +9,45 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="소스 파일\00.Main">
+      <UniqueIdentifier>{5da1fceb-1ca5-45e2-8ec1-591c640dedd9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\99.Common">
+      <UniqueIdentifier>{53546f5f-29ab-4b40-bf10-e7805c26d01d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="DirectX11.h">
-      <Filter>소스 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="framework.h">
-      <Filter>소스 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Resource.h">
-      <Filter>소스 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="targetver.h">
-      <Filter>소스 파일</Filter>
-    </ClInclude>
     <ClInclude Include="Core.h">
       <Filter>소스 파일</Filter>
     </ClInclude>
-    <ClInclude Include="DX11Device.h" />
+    <ClInclude Include="DX11Device.h">
+      <Filter>소스 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>소스 파일\99.Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource.h">
+      <Filter>소스 파일\99.Common</Filter>
+    </ClInclude>
+    <ClInclude Include="framework.h">
+      <Filter>소스 파일\99.Common</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectX11.h">
+      <Filter>소스 파일\99.Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Polygon.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="Core.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="DX11Device.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>소스 파일\00.Main</Filter>
+    </ClCompile>
+    <ClCompile Include="Polygon.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>

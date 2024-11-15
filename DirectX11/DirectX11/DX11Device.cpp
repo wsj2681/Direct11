@@ -1,10 +1,11 @@
 #include "framework.h"
 #include "DX11Device.h"
 
-DX11Device::DX11Device(HWND hWnd)
 
+DX11Device::DX11Device(HWND hWnd)
 {
 	Initialize(hWnd);
+	polygon = make_unique<CPolygon>(device, 100);
 }
 
 void DX11Device::Initialize(HWND hWnd)
@@ -52,116 +53,6 @@ void DX11Device::Initialize(HWND hWnd)
 	viewport.MaxDepth = 1.f;
 
 	devcon->RSSetViewports(1, &viewport);
-
-	//CreateTriangle();
-	CreateRectangle();
-}
-
-struct Vertex
-{
-	XMFLOAT3 position;
-	XMFLOAT4 color;
-};
-
-void DX11Device::CreateTriangle()
-{
-	Vertex vertices[] =
-	{
-		XMFLOAT3(0.5f, 0.5f, 0.0f), XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f),
-		XMFLOAT3(0.5f, -0.5f, 0.0f), XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f),
-		XMFLOAT3(-0.0f, -0.0f, 0.0f), XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f),
-	};
-
-	UINT indices[] = { 0, 1, 2 };
-
-	// Vertex Buffer
-	D3D11_BUFFER_DESC bufferdesc= {};
-	bufferdesc.Usage = D3D11_USAGE_DEFAULT;
-	bufferdesc.ByteWidth = sizeof(vertices);
-	bufferdesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-	bufferdesc.CPUAccessFlags = 0;
-
-	D3D11_SUBRESOURCE_DATA initdata = {};
-	initdata.pSysMem = vertices;
-
-	HR(device->CreateBuffer(&bufferdesc, &initdata, triangleVertexBuffer.GetAddressOf()));
-
-	// Index Buffer
-	bufferdesc.ByteWidth = sizeof(indices);
-	bufferdesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
-	
-	initdata.pSysMem = indices;
-
-	HR(device->CreateBuffer(&bufferdesc, &initdata, triangleIndexBuffer.GetAddressOf()));
-
-	ComPtr<ID3DBlob> vsBlob;
-	HR(D3DCompileFromFile(L"triangleShader.hlsl", nullptr, nullptr, "VSMain", "vs_5_0", 0, 0, vsBlob.GetAddressOf(), nullptr));
-	HR(device->CreateVertexShader(vsBlob->GetBufferPointer(), vsBlob->GetBufferSize(), nullptr, trianglevertexShader.GetAddressOf()));
-
-	ComPtr<ID3DBlob> psBlob;
-	HR(D3DCompileFromFile(L"triangleShader.hlsl", nullptr, nullptr, "PSMain", "ps_5_0", 0, 0, psBlob.GetAddressOf(), nullptr));
-	HR(device->CreatePixelShader(psBlob->GetBufferPointer(), psBlob->GetBufferSize(), nullptr, trianglepixelShader.GetAddressOf()));
-
-	D3D11_INPUT_ELEMENT_DESC layout[] = 
-	{
-		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 }
-	};
-
-	HR(device->CreateInputLayout(layout, ARRAYSIZE(layout), vsBlob->GetBufferPointer(), vsBlob->GetBufferSize(), triangleinputLayout.GetAddressOf()));
-}
-
-void DX11Device::CreateRectangle()
-{
-	Vertex vertices[] =
-	{
-		{XMFLOAT3(-0.5f, 0.5f, 0.0f), XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f)},
-		{XMFLOAT3(0.5f, 0.5f, 0.0f), XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f)},
-		{XMFLOAT3(0.5f, -0.5f, 0.0f), XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f)},
-		{XMFLOAT3(-0.5f, -0.5f, 0.0f), XMFLOAT4(1.0f, 1.0f, 0.0f, 1.0f)}
-	};
-
-	UINT indices[] = 
-	{ 
-		0, 1, 2,
-		0, 2, 3 
-	};
-
-	// Vertex Buffer
-	D3D11_BUFFER_DESC bufferdesc = {};
-	bufferdesc.Usage = D3D11_USAGE_DEFAULT;
-	bufferdesc.ByteWidth = sizeof(vertices);
-	bufferdesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-	bufferdesc.CPUAccessFlags = 0;
-
-	D3D11_SUBRESOURCE_DATA initdata = {};
-	initdata.pSysMem = vertices;
-
-	HR(device->CreateBuffer(&bufferdesc, &initdata, rectVertexBuffer.GetAddressOf()));
-
-	// Index Buffer
-	bufferdesc.ByteWidth = sizeof(indices);
-	bufferdesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
-
-	initdata.pSysMem = indices;
-
-	HR(device->CreateBuffer(&bufferdesc, &initdata, rectIndexBuffer.GetAddressOf()));
-
-	ComPtr<ID3DBlob> vsBlob;
-	HR(D3DCompileFromFile(L"triangleShader.hlsl", nullptr, nullptr, "VSMain", "vs_5_0", 0, 0, vsBlob.GetAddressOf(), nullptr));
-	HR(device->CreateVertexShader(vsBlob->GetBufferPointer(), vsBlob->GetBufferSize(), nullptr, rectvertexShader.GetAddressOf()));
-
-	ComPtr<ID3DBlob> psBlob;
-	HR(D3DCompileFromFile(L"triangleShader.hlsl", nullptr, nullptr, "PSMain", "ps_5_0", 0, 0, psBlob.GetAddressOf(), nullptr));
-	HR(device->CreatePixelShader(psBlob->GetBufferPointer(), psBlob->GetBufferSize(), nullptr, rectpixelShader.GetAddressOf()));
-
-	D3D11_INPUT_ELEMENT_DESC layout[] =
-	{
-		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 }
-	};
-
-	HR(device->CreateInputLayout(layout, ARRAYSIZE(layout), vsBlob->GetBufferPointer(), vsBlob->GetBufferSize(), rectinputLayout.GetAddressOf()));
 }
 
 void DX11Device::Render()
@@ -169,19 +60,10 @@ void DX11Device::Render()
 	float clearColor[4] = { 0.f, 0.f, 0.4f, 1.f };
 	devcon->ClearRenderTargetView(rtv.Get(), clearColor);
 
-	//Render Rectangle
-	devcon->IASetInputLayout(rectinputLayout.Get());
-	devcon->VSSetShader(rectvertexShader.Get(), nullptr, 0);
-	devcon->PSSetShader(rectpixelShader.Get(), nullptr, 0);
-
-	UINT stride = sizeof(Vertex);
-	UINT offset = 0;
-	devcon->IASetVertexBuffers(0, 1, rectVertexBuffer.GetAddressOf(), &stride, &offset);
-	devcon->IASetIndexBuffer(rectIndexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
-
-	devcon->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	//devcon->Draw(3, 0);
-	devcon->DrawIndexed(6, 0, 0);
+	if (polygon)
+	{
+		polygon->Render(devcon);
+	}
 
 	swapchain->Present(1, 0);
 }

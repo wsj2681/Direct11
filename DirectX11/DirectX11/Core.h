@@ -1,5 +1,6 @@
 #pragma once
 #include "DX11Device.h"
+#include "Polygon.h"
 
 #define MAX_LOADSTRING 100
 
@@ -25,5 +26,4 @@ private:
     WCHAR szWindowClass[MAX_LOADSTRING];
 
     unique_ptr<DX11Device> device;
-
 };
