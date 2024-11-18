@@ -34,6 +34,7 @@ using Microsoft::WRL::ComPtr;
 
 #define FRAMEBUFFER_WIDTH 800
 #define FRAMEBUFFER_HEIGHT 600
+constexpr float ASPECTRATIO (static_cast<float>(FRAMEBUFFER_WIDTH) / FRAMEBUFFER_HEIGHT);
 
 //HR
 #if defined(DEBUG) | defined(_DEBUG)

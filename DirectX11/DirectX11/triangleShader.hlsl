@@ -1,3 +1,10 @@
+cbuffer ConstantBuffer : register(b0)
+{
+	matrix world;
+	matrix view;
+	matrix projection;
+};
+
 struct VSInput
 {
 	float3 position : POSITION;
@@ -13,7 +20,10 @@ struct PSInput
 PSInput VSMain(VSInput input)
 {
 	PSInput output;
-	output.position = float4(input.position, 1.0);
+	float4 pos = float4(input.position, 1.0f);
+	output.position = mul(pos, world);
+	output.position = mul(output.position, view);
+	output.position = mul(output.position, projection);
 	output.color = input.color;
 	return output;
 }
