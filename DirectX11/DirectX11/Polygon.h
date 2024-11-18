@@ -44,6 +44,8 @@ private:
 	UINT indexCount = 0;
 
 	XMMATRIX worldMatrix;
+	XMFLOAT3 rotation;
+
 public:
 
 	void Render(ComPtr<ID3D11DeviceContext>& devcon, XMMATRIX& viewMatrix, XMMATRIX& projectionMatrix);

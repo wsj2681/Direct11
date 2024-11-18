@@ -4,7 +4,8 @@
 CPolygon::CPolygon(ComPtr<ID3D11Device>& device, UINT vertexCount)
 {
 	worldMatrix = XMMatrixIdentity();
-
+	worldMatrix = XMMatrixTranslation(0.f, 0.f, 0.f);
+	rotation = { 0.f, 0.f, 0.f };
 	CreatePolygonVertex(vertexCount);
 	CreateVertexBuffer(device);
 	CreateIndexBuffer(device);
@@ -101,7 +102,9 @@ void CPolygon::CreateShader(ComPtr<ID3D11Device>& device)
 
 void CPolygon::Render(ComPtr<ID3D11DeviceContext>& devcon, XMMATRIX& viewMatrix, XMMATRIX& projectionMatrix)
 {
-	worldMatrix = XMMatrixIdentity();
+	XMMATRIX rotationMatrix = XMMatrixRotationRollPitchYaw(rotation.x, rotation.y, rotation.z);
+	worldMatrix = rotationMatrix * XMMatrixTranslation(0.f, 0.f, 0.f);
+	rotation.y+=0.01f;
 
 	ConstantBuffer cb = {};
 	cb.world = XMMatrixTranspose(worldMatrix);
