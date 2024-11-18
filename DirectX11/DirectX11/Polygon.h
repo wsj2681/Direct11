@@ -16,9 +16,11 @@ public:
 	CPolygon(ComPtr<ID3D11Device>& device, UINT vertices = 3);
 	~CPolygon() = default;
 
+protected:
+	virtual void CreatePolygonVertex(UINT vertexCount);
+
 private:
 
-	void CreatePolygonVertex(UINT vertexCount);
 	void CreateVertexBuffer(ComPtr<ID3D11Device>& device);
 	void CreateIndexBuffer(ComPtr<ID3D11Device>& device);
 	void CreateConstantBuffer(ComPtr<ID3D11Device>& device);

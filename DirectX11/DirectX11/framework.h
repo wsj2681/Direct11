@@ -24,6 +24,7 @@
 #include <stdexcept>
 #include <iostream>
 #include <vector>
+#include <random>
 using namespace std;
 using namespace DirectX;
 using Microsoft::WRL::ComPtr;

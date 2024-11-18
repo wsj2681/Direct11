@@ -13,6 +13,14 @@ CPolygon::CPolygon(ComPtr<ID3D11Device>& device, UINT vertexCount)
 	CreateShader(device);
 }
 
+const XMFLOAT4& GenerateRandomColor()
+{
+	random_device rd;
+	mt19937 gen(rd());
+	uniform_real_distribution<float> dist(0.0f, 1.0f);
+	return XMFLOAT4(dist(gen), dist(gen), dist(gen), 1.0f);
+}
+
 void CPolygon::CreatePolygonVertex(UINT vertexCount)
 {
 	const float radius = 0.5f;
@@ -23,7 +31,7 @@ void CPolygon::CreatePolygonVertex(UINT vertexCount)
 	for (int i = 0; i < vertexCount; ++i)
 	{
 		float angle = i * angleIncrement;
-		vertices.at(i) = { {radius * sin(angle), radius * cos(angle), 0.f}, {1.0f, 0.0f, 0.0f, 1.0f} };
+		vertices.at(i) = { {radius * sin(angle), radius * cos(angle), 0.f}, GenerateRandomColor() };
 	}
 
 	// Create Index
