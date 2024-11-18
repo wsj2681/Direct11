@@ -65,6 +65,15 @@ void DX11Device::Initialize(HWND hWnd)
 
 	devcon->OMSetRenderTargets(1, rtv.GetAddressOf(), dsv.Get());
 
+	D3D11_RASTERIZER_DESC rasterdesc = {};
+	rasterdesc.FillMode = D3D11_FILL_SOLID;
+	rasterdesc.CullMode = D3D11_CULL_NONE;
+	rasterdesc.FrontCounterClockwise = false;
+
+	ComPtr<ID3D11RasterizerState> rasterState;
+	HR(device->CreateRasterizerState(&rasterdesc, rasterState.GetAddressOf()));
+	devcon->RSSetState(rasterState.Get());
+
 	D3D11_VIEWPORT viewport = {};
 	viewport.TopLeftX = 0;
 	viewport.TopLeftY = 0;
