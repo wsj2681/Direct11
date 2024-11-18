@@ -9,6 +9,13 @@ Model::Model(ComPtr<ID3D11Device>& device, const vector<Vertex>& vertices, const
 	shader->SetConstantBuffer(device);
 }
 
+void Model::Update()
+{
+	rotation.y += 0.01f;
+	XMMATRIX rotationMatrix = XMMatrixRotationRollPitchYaw(rotation.x, rotation.y, rotation.z);
+	worldMatrix = rotationMatrix * XMMatrixTranslation(0.f, 0.f, 0.f);
+}
+
 void Model::Render(ComPtr<ID3D11DeviceContext>& devcon, const XMMATRIX& view, const XMMATRIX& projection)
 {
 	shader->UpdateConstantBuffer(devcon, worldMatrix, view, projection);

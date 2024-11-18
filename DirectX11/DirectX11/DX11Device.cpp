@@ -59,12 +59,14 @@ void DX11Device::Initialize(HWND hWnd)
 
 	D3D11_RASTERIZER_DESC rasterdesc = {};
 	rasterdesc.FillMode = D3D11_FILL_SOLID;
-	rasterdesc.CullMode = D3D11_CULL_BACK;
+	rasterdesc.CullMode = D3D11_CULL_NONE;
 	rasterdesc.FrontCounterClockwise = false;
 
 	ComPtr<ID3D11RasterizerState> rasterState;
 	HR(device->CreateRasterizerState(&rasterdesc, rasterState.GetAddressOf()));
 	devcon->RSSetState(rasterState.Get());
+
+
 
 	D3D11_VIEWPORT viewport = {};
 	viewport.TopLeftX = 0;
@@ -79,7 +81,7 @@ void DX11Device::Initialize(HWND hWnd)
 
 void DX11Device::ClearBackBuffer()
 {
-	float clearColor[4] = { 0.f, 0.f, 0.4f, 1.f };
+	float clearColor[4] = { 1.f, 1.f, 1.f, 1.f };
 	devcon->ClearRenderTargetView(rtv.Get(), clearColor);
 	devcon->ClearDepthStencilView(dsv.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 }

@@ -10,12 +10,14 @@ public:
     Model(ComPtr<ID3D11Device>& device, const vector<Vertex>& vertices, const vector<UINT>& indices, const wchar_t* vsPath, const wchar_t* psPath);
     ~Model() = default;
 
+    void Update();
     void Render(ComPtr<ID3D11DeviceContext>& devcon, const XMMATRIX& view, const XMMATRIX& projection);
-
 private:
 
     Mesh* mesh = nullptr;
     Shader* shader = nullptr;
     XMMATRIX worldMatrix = XMMatrixIdentity();
+    XMFLOAT3 rotation = { 0.f, 0.f, 0.f };
+
 };
 

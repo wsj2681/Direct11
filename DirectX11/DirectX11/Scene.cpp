@@ -10,7 +10,7 @@ Scene::Scene(HWND hWnd)
 		XMFLOAT3(0.0f, 1.0f, 0.0f)   // UpVector
 	);
 
-	UINT vertexCount = 100;
+	UINT vertexCount = 4;
 	const float radius = 0.5f;
 	const float angleIncrement = XM_2PI / vertexCount;
 
@@ -36,6 +36,13 @@ void Scene::Render()
 {
 	device->ClearBackBuffer();
 
+	// Object Update
+	if (model)
+	{
+		model->Update();
+	}
+
+	// Object Draw
 	if (model)
 	{
 		model->Render(device->GetDeviceContext(), camera->GetViewMatrix(), camera->GetProjectionMatrix());
