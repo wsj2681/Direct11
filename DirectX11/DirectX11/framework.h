@@ -26,6 +26,10 @@
 #include <iostream>
 #include <vector>
 #include <random>
+#include <fstream>
+#include <sstream>
+#include <iostream>
+#include <string>
 using namespace std;
 using namespace DirectX;
 using Microsoft::WRL::ComPtr;
