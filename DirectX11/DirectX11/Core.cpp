@@ -22,7 +22,7 @@ bool Core::Initialize(int nCmdShow)
         return false;
     }
 
-    device = make_unique<DX11Device>(hWnd);
+    scene = make_unique<Scene>(hWnd);
 
     POINT currentMousePosition;
     GetCursorPos(&currentMousePosition);
@@ -44,7 +44,7 @@ int Core::Run()
         }
         else
         {
-            device->Render();
+            scene->Render();
         }
     }
     return static_cast<int>(msg.wParam);
@@ -122,8 +122,8 @@ LRESULT CALLBACK Core::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lP
         float deltaX = static_cast<float>(currentMousePosition.x - core->lastMousePosition.x);
         float deltaY = static_cast<float>(currentMousePosition.y - core->lastMousePosition.y);
 
-        core->device->GetCamera()->UpdateCameraRotation(deltaX, deltaY);
-        core->lastMousePosition = currentMousePosition;
+        //core->device->GetCamera()->UpdateCameraRotation(deltaX, deltaY);
+        //core->lastMousePosition = currentMousePosition;
         break;
     }
     case WM_KEYUP:

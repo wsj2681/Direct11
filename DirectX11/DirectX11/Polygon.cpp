@@ -1,4 +1,3 @@
-#include "framework.h"
 #include "Polygon.h"
 
 CPolygon::CPolygon(ComPtr<ID3D11Device>& device, UINT vertexCount)
@@ -13,13 +12,7 @@ CPolygon::CPolygon(ComPtr<ID3D11Device>& device, UINT vertexCount)
 	CreateShader(device);
 }
 
-const XMFLOAT4& GenerateRandomColor()
-{
-	random_device rd;
-	mt19937 gen(rd());
-	uniform_real_distribution<float> dist(0.0f, 1.0f);
-	return XMFLOAT4(dist(gen), dist(gen), dist(gen), 1.0f);
-}
+
 
 void CPolygon::CreatePolygonVertex(UINT vertexCount)
 {
@@ -42,9 +35,6 @@ void CPolygon::CreatePolygonVertex(UINT vertexCount)
 		indices.push_back(i + 1);
 	}
 
-	indices.push_back(0);
-	indices.push_back(vertexCount - 1);
-	indices.push_back(1);
 	indexCount = indices.size();
 }
 

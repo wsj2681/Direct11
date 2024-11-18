@@ -37,6 +37,14 @@ using Microsoft::WRL::ComPtr;
 #define FRAMEBUFFER_HEIGHT 600
 constexpr float ASPECTRATIO (static_cast<float>(FRAMEBUFFER_WIDTH) / FRAMEBUFFER_HEIGHT);
 
+inline XMFLOAT4 GenerateRandomColor()
+{
+    random_device rd;
+    mt19937 gen(rd());
+    uniform_real_distribution<float> dist(0.0f, 1.0f);
+    return XMFLOAT4(dist(gen), dist(gen), dist(gen), 1.0f);
+}
+
 //HR
 #if defined(DEBUG) | defined(_DEBUG)
 #ifndef HR

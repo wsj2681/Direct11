@@ -15,14 +15,23 @@
     <Filter Include="소스 파일\99.Common">
       <UniqueIdentifier>{53546f5f-29ab-4b40-bf10-e7805c26d01d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\02.Model">
+      <UniqueIdentifier>{5296202e-d8c6-4e79-b443-c992e3e3dc30}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\01.Core">
+      <UniqueIdentifier>{93348bc4-93db-4e30-82ca-2a3948867b03}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\02.Model\00.Model">
+      <UniqueIdentifier>{46b01773-fe21-4cfc-b81a-141ea94f8b53}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\02.Model\01.Mesh">
+      <UniqueIdentifier>{2795d2d1-4c5b-432d-a0ed-4ca2bac4b931}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\02.Model\02.Shader">
+      <UniqueIdentifier>{e2e17c3e-4cf5-4129-bc02-6914a2f991d1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Core.h">
-      <Filter>소스 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="DX11Device.h">
-      <Filter>소스 파일</Filter>
-    </ClInclude>
     <ClInclude Include="targetver.h">
       <Filter>소스 파일\99.Common</Filter>
     </ClInclude>
@@ -38,24 +47,52 @@
     <ClInclude Include="Polygon.h">
       <Filter>소스 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Camera.h">
-      <Filter>소스 파일</Filter>
+    <ClInclude Include="DX11Device.h">
+      <Filter>소스 파일\01.Core</Filter>
     </ClInclude>
+    <ClInclude Include="Core.h">
+      <Filter>소스 파일\01.Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Model.h">
+      <Filter>소스 파일\02.Model\00.Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Mesh.h">
+      <Filter>소스 파일\02.Model\01.Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="Shader.h">
+      <Filter>소스 파일\02.Model\02.Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera.h">
+      <Filter>소스 파일\01.Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Core.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="DX11Device.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="main.cpp">
       <Filter>소스 파일\00.Main</Filter>
     </ClCompile>
     <ClCompile Include="Polygon.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="DX11Device.cpp">
+      <Filter>소스 파일\01.Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Core.cpp">
+      <Filter>소스 파일\01.Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Model.cpp">
+      <Filter>소스 파일\02.Model\00.Model</Filter>
+    </ClCompile>
+    <ClCompile Include="Mesh.cpp">
+      <Filter>소스 파일\02.Model\01.Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="Shader.cpp">
+      <Filter>소스 파일\02.Model\02.Shader</Filter>
+    </ClCompile>
     <ClCompile Include="Camera.cpp">
+      <Filter>소스 파일\01.Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>

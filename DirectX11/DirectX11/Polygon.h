@@ -1,13 +1,10 @@
 #pragma once
-
+#include "framework.h"
 struct Vertex
 {
 	XMFLOAT3 position;
 	XMFLOAT4 color;
 };
-
-//shader input
-
 
 class CPolygon
 {
@@ -26,6 +23,7 @@ private:
 	void CreateConstantBuffer(ComPtr<ID3D11Device>& device);
 	void CreateShader(ComPtr<ID3D11Device>& device);
 
+	// shader constant buffer
 	struct ConstantBuffer
 	{
 		XMMATRIX world;

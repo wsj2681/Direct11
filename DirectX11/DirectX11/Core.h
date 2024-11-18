@@ -1,6 +1,5 @@
 #pragma once
-#include "DX11Device.h"
-#include "Polygon.h"
+#include "Scene.h"
 
 #define MAX_LOADSTRING 100
 
@@ -27,5 +26,5 @@ private:
     
     POINT lastMousePosition = {};
 
-    unique_ptr<DX11Device> device;
+    unique_ptr<Scene> scene;
 };
