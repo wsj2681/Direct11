@@ -107,7 +107,11 @@ LRESULT CALLBACK Core::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lP
     {
         LPCREATESTRUCT createStruct = reinterpret_cast<LPCREATESTRUCT>(lParam);
         SetWindowLongPtr(hWnd, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(createStruct->lpCreateParams));
-        SetCursorPos(FRAMEBUFFER_WIDTH / 2, FRAMEBUFFER_HEIGHT / 2);
+        RECT clientRect;
+        GetClientRect(hWnd, &clientRect);
+        POINT center = { (clientRect.right - clientRect.left) / 2, (clientRect.bottom - clientRect.top) / 2 };
+        ClientToScreen(hWnd, &center);
+        SetCursorPos(center.x, center.y);
         break;
     }
     case WM_MOUSEMOVE:
