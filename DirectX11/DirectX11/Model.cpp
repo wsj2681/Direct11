@@ -5,7 +5,14 @@ Model::Model(ComPtr<ID3D11Device>& device, const vector<Vertex>& vertices, const
 {
 	mesh = new Mesh(device, vertices, indices);
 	shader = new Shader(device, vsPath, psPath);
+	
+	shader->SetConstantBuffer(device);
+}
 
+Model::Model(ComPtr<ID3D11Device>& device, const vector<Vertex>& vertices, const vector<UINT>& indices, const wchar_t* vsPath, const wchar_t* psPath, const wchar_t* textureFile)
+{
+	mesh = new Mesh(device, vertices, indices);
+	shader = new TextureShader(device, vsPath, psPath, textureFile);
 	shader->SetConstantBuffer(device);
 }
 

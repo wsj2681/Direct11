@@ -1,13 +1,21 @@
 #pragma once
 #include "Mesh.h"
 #include "Shader.h"
+#include "TextureShader.h"
 
 class Model
 {
 public:
 
     Model() = default;
-    Model(ComPtr<ID3D11Device>& device, const vector<Vertex>& vertices, const vector<UINT>& indices, const wchar_t* vsPath, const wchar_t* psPath);
+    Model(ComPtr<ID3D11Device>& device, const 
+        vector<Vertex>& vertices, const vector<UINT>& indices, 
+        const wchar_t* vsPath, const wchar_t* psPath);
+
+    Model(ComPtr<ID3D11Device>& device, 
+        const vector<Vertex>& vertices, const vector<UINT>& indices, 
+        const wchar_t* vsPath, const wchar_t* psPath, const wchar_t* textureFile);
+
     ~Model() = default;
 
     void Update();

@@ -42,6 +42,9 @@
     <Filter Include="소스 파일\01.Core\02.Camera">
       <UniqueIdentifier>{21df81b6-81aa-40b2-8543-95de1671b44e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\미사용">
+      <UniqueIdentifier>{6745c2a8-9a1c-4854-a06a-aa8909797f9d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="targetver.h">
@@ -55,9 +58,6 @@
     </ClInclude>
     <ClInclude Include="DirectX11.h">
       <Filter>소스 파일\99.Common</Filter>
-    </ClInclude>
-    <ClInclude Include="Polygon.h">
-      <Filter>소스 파일</Filter>
     </ClInclude>
     <ClInclude Include="Model.h">
       <Filter>소스 파일\03.Model\00.Model</Filter>
@@ -80,13 +80,13 @@
     <ClInclude Include="Camera.h">
       <Filter>소스 파일\01.Core\02.Camera</Filter>
     </ClInclude>
+    <ClInclude Include="TextureShader.h">
+      <Filter>소스 파일\03.Model\02.Shader</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
       <Filter>소스 파일\00.Main</Filter>
-    </ClCompile>
-    <ClCompile Include="Polygon.cpp">
-      <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Model.cpp">
       <Filter>소스 파일\03.Model\00.Model</Filter>
@@ -109,6 +109,9 @@
     <ClCompile Include="Camera.cpp">
       <Filter>소스 파일\01.Core\02.Camera</Filter>
     </ClCompile>
+    <ClCompile Include="TextureShader.cpp">
+      <Filter>소스 파일\03.Model\02.Shader</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="DirectX11.rc">
@@ -129,6 +132,12 @@
     </None>
     <None Include="textureShader.hlsl">
       <Filter>리소스 파일</Filter>
+    </None>
+    <None Include="Polygon.cpp">
+      <Filter>소스 파일\미사용</Filter>
+    </None>
+    <None Include="Polygon.h">
+      <Filter>소스 파일\미사용</Filter>
     </None>
   </ItemGroup>
 </Project>

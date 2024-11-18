@@ -29,7 +29,7 @@ Scene::Scene(HWND hWnd)
 		indices.push_back(i + 1);
 	}
 
-	model = new Model(device.get()->GetDevice(), vertices, indices, L"triangleShader.hlsl", L"triangleShader.hlsl");
+	model = new Model(device.get()->GetDevice(), vertices, indices, L"textureShader.hlsl", L"textureShader.hlsl", L"sample.dds");
 }
 
 void Scene::Render()
