@@ -24,6 +24,8 @@ private:
     HWND hWnd;
     WCHAR szTitle[MAX_LOADSTRING];
     WCHAR szWindowClass[MAX_LOADSTRING];
+    
+    POINT lastMousePosition;
 
     unique_ptr<DX11Device> device;
 };

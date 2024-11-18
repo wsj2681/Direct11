@@ -22,6 +22,11 @@ public:
         return this->swapchain;
     }
 
+    unique_ptr<Camera>& GetCamera()
+    {
+        return this->camera;
+    }
+
 private:
 	ComPtr<ID3D11Device> device;
 	ComPtr<ID3D11DeviceContext> devcon;
