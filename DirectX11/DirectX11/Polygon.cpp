@@ -4,8 +4,6 @@
 CPolygon::CPolygon(ComPtr<ID3D11Device>& device, UINT vertexCount)
 {
 	worldMatrix = XMMatrixIdentity();
-	viewMatrix = XMMatrixIdentity();
-	projectionMatrix = XMMatrixIdentity();
 
 	CreatePolygonVertex(vertexCount);
 	CreateVertexBuffer(device);
@@ -101,22 +99,9 @@ void CPolygon::CreateShader(ComPtr<ID3D11Device>& device)
 	HR(device->CreateInputLayout(layout, ARRAYSIZE(layout), vsBlob->GetBufferPointer(), vsBlob->GetBufferSize(), inputLayout.GetAddressOf()));
 }
 
-void CPolygon::Render(ComPtr<ID3D11DeviceContext>& devcon)
+void CPolygon::Render(ComPtr<ID3D11DeviceContext>& devcon, XMMATRIX& viewMatrix, XMMATRIX& projectionMatrix)
 {
 	worldMatrix = XMMatrixIdentity();
-
-	viewMatrix = XMMatrixLookAtLH(
-		XMVectorSet(0.0f, 2.0f, -5.0f, 1.0f),
-		XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f),
-		XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f)
-	);
-
-	projectionMatrix = DirectX::XMMatrixPerspectiveFovLH(
-		XM_PIDIV4,
-		ASPECTRATIO,
-		0.1f,
-		100.0f
-	);
 
 	ConstantBuffer cb = {};
 	cb.world = XMMatrixTranspose(worldMatrix);

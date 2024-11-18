@@ -38,6 +38,7 @@
     <ClInclude Include="Polygon.h">
       <Filter>소스 파일</Filter>
     </ClInclude>
+    <ClInclude Include="Camera.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Core.cpp">
@@ -50,6 +51,9 @@
       <Filter>소스 파일\00.Main</Filter>
     </ClCompile>
     <ClCompile Include="Polygon.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>

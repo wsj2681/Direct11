@@ -1,5 +1,7 @@
 #pragma once
 #include "Polygon.h"
+#include "Camera.h"
+
 class DX11Device
 {
 public:
@@ -26,7 +28,9 @@ private:
 	ComPtr<IDXGISwapChain> swapchain;
     ComPtr<ID3D11RenderTargetView> rtv;
     ComPtr<ID3D11DepthStencilView> dsv;
+    
     unique_ptr<CPolygon> polygon;
+    unique_ptr<Camera> camera;
 
 public:
 

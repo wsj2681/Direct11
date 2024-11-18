@@ -7,12 +7,7 @@ struct Vertex
 };
 
 //shader input
-struct ConstantBuffer
-{
-	XMMATRIX world;
-	XMMATRIX view;
-	XMMATRIX projection;
-};
+
 
 class CPolygon
 {
@@ -29,6 +24,13 @@ private:
 	void CreateConstantBuffer(ComPtr<ID3D11Device>& device);
 	void CreateShader(ComPtr<ID3D11Device>& device);
 
+	struct ConstantBuffer
+	{
+		XMMATRIX world;
+		XMMATRIX view;
+		XMMATRIX projection;
+	};
+
 
 	vector<Vertex> vertices;
 	vector<UINT> indices;
@@ -42,10 +44,8 @@ private:
 	UINT indexCount = 0;
 
 	XMMATRIX worldMatrix;
-	XMMATRIX viewMatrix;
-	XMMATRIX projectionMatrix;
 public:
 
-	void Render(ComPtr<ID3D11DeviceContext>& devcon);
+	void Render(ComPtr<ID3D11DeviceContext>& devcon, XMMATRIX& viewMatrix, XMMATRIX& projectionMatrix);
 };
 

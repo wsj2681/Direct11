@@ -6,6 +6,13 @@ DX11Device::DX11Device(HWND hWnd)
 {
 	Initialize(hWnd);
 	polygon = make_unique<CPolygon>(device, 100);
+
+	camera = make_unique<Camera>(
+		XMFLOAT3(0.0f, 0.0f, -5.0f), // Position
+		XMFLOAT3(0.0f, 0.0f, 0.0f),  // LookAt
+		XMFLOAT3(0.0f, 1.0f, 0.0f)   // UpVector
+	);
+
 }
 
 void DX11Device::Initialize(HWND hWnd)
@@ -77,7 +84,7 @@ void DX11Device::Render()
 
 	if (polygon)
 	{
-		polygon->Render(devcon);
+		polygon->Render(devcon, camera->GetViewMatrix(), camera->GetProjectionMatrix());
 	}
 
 	swapchain->Present(1, 0);
