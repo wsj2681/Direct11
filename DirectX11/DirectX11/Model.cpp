@@ -1,7 +1,7 @@
 #include "framework.h"
 #include "Model.h"
 
-Model::Model(ComPtr<ID3D11Device>& device, const vector<Vertex>& vertices, const vector<UINT>& indices, const wchar_t* vsPath, const wchar_t* psPath)
+Model::Model(ComPtr<ID3D11Device>& device, const vector<ColorVertex>& vertices, const vector<UINT>& indices, const wchar_t* vsPath, const wchar_t* psPath)
 {
 	mesh = new Mesh(device, vertices, indices);
 	shader = new Shader(device, vsPath, psPath);
@@ -9,7 +9,7 @@ Model::Model(ComPtr<ID3D11Device>& device, const vector<Vertex>& vertices, const
 	shader->SetConstantBuffer(device);
 }
 
-Model::Model(ComPtr<ID3D11Device>& device, const vector<Vertex>& vertices, const vector<UINT>& indices, const wchar_t* vsPath, const wchar_t* psPath, const wchar_t* textureFile)
+Model::Model(ComPtr<ID3D11Device>& device, const vector<ColorVertex>& vertices, const vector<UINT>& indices, const wchar_t* vsPath, const wchar_t* psPath, const wchar_t* textureFile)
 {
 	mesh = new Mesh(device, vertices, indices);
 	shader = new TextureShader(device, vsPath, psPath, textureFile);

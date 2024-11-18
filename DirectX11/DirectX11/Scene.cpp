@@ -5,16 +5,16 @@ Scene::Scene(HWND hWnd)
 {
 	device = make_unique<DX11Device>(hWnd);
 	camera = make_unique<Camera>(
-		XMFLOAT3(0.0f, 0.0f, -5.0f), // Position
+		XMFLOAT3(0.0f, 5.0f, -10.0f), // Position
 		XMFLOAT3(0.0f, 0.0f, 0.0f),  // LookAt
 		XMFLOAT3(0.0f, 1.0f, 0.0f)   // UpVector
 	);
 
-	UINT vertexCount = 4;
+	UINT vertexCount = 5;
 	const float radius = 0.5f;
 	const float angleIncrement = XM_2PI / vertexCount;
 
-	vector<Vertex> vertices(vertexCount);
+	vector<ColorVertex> vertices(vertexCount);
 	for (int i = 0; i < vertexCount; ++i)
 	{
 		float angle = i * angleIncrement;
@@ -29,7 +29,36 @@ Scene::Scene(HWND hWnd)
 		indices.push_back(i + 1);
 	}
 
-	model = new Model(device.get()->GetDevice(), vertices, indices, L"textureShader.hlsl", L"textureShader.hlsl", L"sample.dds");
+	
+	vector<ColorVertex> cubevertices = {
+	{{-1.0f, +1.0f, -1.0f}, {1.0f, 0.0f, 0.0f, 1.0f}}, // 0
+	{{+1.0f, +1.0f, -1.0f}, {0.0f, 1.0f, 0.0f, 1.0f}}, // 1
+	{{+1.0f, +1.0f, +1.0f}, {0.0f, 0.0f, 1.0f, 1.0f}}, // 2
+	{{-1.0f, +1.0f, +1.0f}, {1.0f, 1.0f, 0.0f, 1.0f}}, // 3
+	{{-1.0f, -1.0f, -1.0f}, {1.0f, 0.0f, 1.0f, 1.0f}}, // 4
+	{{+1.0f, -1.0f, -1.0f}, {0.5f, 0.5f, 0.5f, 1.0f}}, // 5
+	{{+1.0f, -1.0f, +1.0f}, {0.0f, 1.0f, 1.0f, 1.0f}}, // 6
+	{{-1.0f, -1.0f, +1.0f}, {1.0f, 0.5f, 0.0f, 1.0f}}, // 7
+	};
+
+	vector<UINT> cubeindices = {
+		// Front face edges
+		3,1,0,
+		2,1,3,
+		0,5,4,
+		1,5,0,
+		3,4,7,
+		0,4,3,
+		1,6,5,
+		2,6,1,
+		2,7,6,
+		3,7,2,
+		6,4,5,
+		7,4,6
+	};
+
+	model = new Model(device.get()->GetDevice(), cubevertices, cubeindices, L"triangleShader.hlsl", L"triangleShader.hlsl");
+	//model = new Model(device.get()->GetDevice(), vertices, indices, L"textureShader.hlsl", L"textureShader.hlsl", L"sample.dds");
 }
 
 void Scene::Render()

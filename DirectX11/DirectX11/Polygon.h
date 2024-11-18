@@ -1,6 +1,6 @@
 #pragma once
 #include "framework.h"
-struct Vertex
+struct ColorVertex
 {
 	XMFLOAT3 position;
 	XMFLOAT4 color;
@@ -32,7 +32,7 @@ private:
 	};
 
 
-	vector<Vertex> vertices;
+	vector<ColorVertex> vertices;
 	vector<UINT> indices;
 	ComPtr<ID3D11Buffer> vertexBuffer;
 	ComPtr<ID3D11Buffer> indexBuffer;

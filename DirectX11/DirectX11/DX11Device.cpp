@@ -19,6 +19,7 @@ void DX11Device::Initialize(HWND hWnd)
 	swapchaindesc.OutputWindow = hWnd;
 	swapchaindesc.SampleDesc.Count = 1;
 	swapchaindesc.Windowed = true;
+	swapchaindesc.BufferDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
 
 	HR(D3D11CreateDeviceAndSwapChain(
 		nullptr,
@@ -59,7 +60,7 @@ void DX11Device::Initialize(HWND hWnd)
 
 	D3D11_RASTERIZER_DESC rasterdesc = {};
 	rasterdesc.FillMode = D3D11_FILL_SOLID;
-	rasterdesc.CullMode = D3D11_CULL_NONE;
+	rasterdesc.CullMode = D3D11_CULL_BACK;
 	rasterdesc.FrontCounterClockwise = false;
 
 	ComPtr<ID3D11RasterizerState> rasterState;
