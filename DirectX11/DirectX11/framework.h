@@ -30,6 +30,7 @@
 #include <sstream>
 #include <iostream>
 #include <string>
+#include <unordered_map>
 using namespace std;
 using namespace DirectX;
 using Microsoft::WRL::ComPtr;
@@ -37,6 +38,11 @@ using Microsoft::WRL::ComPtr;
 #pragma comment(lib,"d3dcompiler.lib")
 #pragma comment(lib,"d3d11.lib")
 #pragma comment(lib,"dxgi.lib")
+
+#include <fbxsdk.h>
+
+#pragma comment(lib, "libfbxsdk.lib")
+#pragma comment(lib, "libxml2.lib")
 
 #define FRAMEBUFFER_WIDTH 800
 #define FRAMEBUFFER_HEIGHT 600
@@ -70,3 +76,5 @@ inline XMFLOAT4 GenerateRandomColor()
 #define   HR(x) (x);
 #endif
 #endif
+
+#define SAFE_RESET(x) if((x)) x.Reset()
