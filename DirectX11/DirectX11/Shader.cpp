@@ -2,7 +2,7 @@
 
 Shader::Shader(ComPtr<ID3D11Device>& device, const wchar_t* vsPath, const wchar_t* psPath)
 {
-	// ColorVertex Shader
+	// DiffusedVertex Shader
 	ComPtr<ID3DBlob> vsBlob;
 	HR(D3DCompileFromFile(vsPath, nullptr, nullptr, "VSMain", "vs_5_0", 0, 0, vsBlob.GetAddressOf(), nullptr));
 	HR(device->CreateVertexShader(vsBlob->GetBufferPointer(), vsBlob->GetBufferSize(), nullptr, vertexShader.GetAddressOf()));
@@ -18,6 +18,14 @@ Shader::Shader(ComPtr<ID3D11Device>& device, const wchar_t* vsPath, const wchar_
 		{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 }
 	};
 	HR(device->CreateInputLayout(layout, ARRAYSIZE(layout), vsBlob->GetBufferPointer(), vsBlob->GetBufferSize(), inputLayout.GetAddressOf()));
+}
+
+Shader::~Shader()
+{
+	SAFE_RESET(vertexShader);
+	SAFE_RESET(pixelShader);
+	SAFE_RESET(constantBuffer);
+	SAFE_RESET(inputLayout);
 }
 
 void Shader::SetConstantBuffer(ComPtr<ID3D11Device>& device)

@@ -6,7 +6,7 @@ class Shader
 public:
     Shader() = default;
     Shader(ComPtr<ID3D11Device>& device, const wchar_t* vsPath, const wchar_t* psPath);
-    ~Shader() = default;
+    ~Shader();
 
     virtual void SetConstantBuffer(ComPtr<ID3D11Device>& device);
     virtual void UpdateConstantBuffer(ComPtr<ID3D11DeviceContext>& devcon, const XMMATRIX& world, const XMMATRIX& view, const XMMATRIX& projection);

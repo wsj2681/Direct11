@@ -2,7 +2,7 @@
 
 TextureShader::TextureShader(ComPtr<ID3D11Device>& device, const wchar_t* vsPath, const wchar_t* psPath, const wchar_t* textureFile)
 {
-	// ColorVertex Shader
+	// DiffusedVertex Shader
 	ComPtr<ID3DBlob> vsBlob;
 	HR(D3DCompileFromFile(vsPath, nullptr, nullptr, "VSMain", "vs_5_0", 0, 0, vsBlob.GetAddressOf(), nullptr));
 	HR(device->CreateVertexShader(vsBlob->GetBufferPointer(), vsBlob->GetBufferSize(), nullptr, vertexShader.GetAddressOf()));
@@ -32,6 +32,8 @@ TextureShader::TextureShader(ComPtr<ID3D11Device>& device, const wchar_t* vsPath
 
 TextureShader::~TextureShader()
 {
+	SAFE_RESET(textureView);
+	SAFE_RESET(samplerstate);
 }
 
 void TextureShader::SetConstantBuffer(ComPtr<ID3D11Device>& device)

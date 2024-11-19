@@ -5,7 +5,7 @@ Scene::Scene(HWND hWnd)
 {
 	device = make_unique<DX11Device>(hWnd);
 	camera = make_unique<Camera>(
-		XMFLOAT3(0.0f, 5.0f, -10.0f), // Position
+		XMFLOAT3(0.0f, 2.0f, -20.0f), // Position
 		XMFLOAT3(0.0f, 0.0f, 0.0f),  // LookAt
 		XMFLOAT3(0.0f, 1.0f, 0.0f)   // UpVector
 	);
@@ -14,7 +14,7 @@ Scene::Scene(HWND hWnd)
 	const float radius = 0.5f;
 	const float angleIncrement = XM_2PI / vertexCount;
 
-	vector<ColorVertex> vertices(vertexCount);
+	vector<DiffusedVertex> vertices(vertexCount);
 	for (int i = 0; i < vertexCount; ++i)
 	{
 		float angle = i * angleIncrement;
@@ -30,7 +30,7 @@ Scene::Scene(HWND hWnd)
 	}
 
 	
-	vector<ColorVertex> cubevertices = {
+	vector<DiffusedVertex> cubevertices = {
 	{{-1.0f, +1.0f, -1.0f}, {1.0f, 0.0f, 0.0f, 1.0f}}, // 0
 	{{+1.0f, +1.0f, -1.0f}, {0.0f, 1.0f, 0.0f, 1.0f}}, // 1
 	{{+1.0f, +1.0f, +1.0f}, {0.0f, 0.0f, 1.0f, 1.0f}}, // 2
@@ -57,8 +57,10 @@ Scene::Scene(HWND hWnd)
 		7,4,6
 	};
 
-	model = new Model(device.get()->GetDevice(), cubevertices, cubeindices, L"triangleShader.hlsl", L"triangleShader.hlsl");
 	//model = new Model(device.get()->GetDevice(), vertices, indices, L"textureShader.hlsl", L"textureShader.hlsl", L"sample.dds");
+	//model = new Model(device.get()->GetDevice(), cubevertices, cubeindices, L"triangleShader.hlsl", L"triangleShader.hlsl");
+
+	model = new Model(device.get()->GetDevice(), L"FinalBaseMesh.obj", L"textureShader.hlsl", L"textureShader.hlsl", L"sample.dds");
 }
 
 void Scene::Render()

@@ -5,7 +5,7 @@ class DX11Device
 public:
 	DX11Device() = default;
     DX11Device(HWND hWnd);
-	~DX11Device() = default;
+    ~DX11Device();
 
     ComPtr<ID3D11Device>& GetDevice()
     {
