@@ -1,6 +1,26 @@
 #include "framework.h"
 #include "Camera.h"
 
+Camera::Camera()
+{
+	position = { 0.f, 0.f, 0.f };
+	target = { 0.f, 0.f, 0.f };
+	upVector = { 0.f, 0.f, 0.f };
+
+	viewMatrix = XMMatrixLookAtLH(
+		XMVectorSet(position.x, position.y, position.z, 1.0f),
+		XMVectorSet(target.x, target.y, target.z, 1.0f),
+		XMVectorSet(upVector.x, upVector.y, upVector.z, 0.0f)
+	);
+
+	projectionMatrix = XMMatrixPerspectiveFovLH(
+		XMConvertToRadians(45.0f),
+		ASPECTRATIO,
+		0.1f,
+		100.0f
+	);
+}
+
 Camera::Camera(const XMFLOAT3& position, const XMFLOAT3& target, const XMFLOAT3& upVector)
 	:position(position), target(target), upVector(upVector)
 {
