@@ -38,38 +38,49 @@ Camera::Camera(const XMFLOAT3& position, const XMFLOAT3& target, const XMFLOAT3&
 	);
 }
 
-void Camera::UpdateCameraRotation(const float& deltaX, const float& deltaY)
+void Camera::Move(const XMFLOAT3& direction, float deltaTime)
 {
-	constexpr float sensitivity = 0.0005f;
-	yaw += deltaX * sensitivity;
-	pitch -= deltaY * sensitivity;
+	XMVECTOR forward = XMVector3Normalize(XMLoadFloat3(&target) - XMLoadFloat3(&position));
+	XMVECTOR right = XMVector3Normalize(XMVector3Cross(XMLoadFloat3(&upVector), forward));
 
-	constexpr float limit = XMConvertToRadians(89.0f);
+	XMVECTOR movement = XMVectorZero();
+	movement += XMVectorScale(forward, direction.z);
+	movement += XMVectorScale(right, direction.x);
 
-	if (pitch > limit)
-	{
-		pitch = limit;
-	}
-	if (pitch < -limit)
-	{
-		pitch = -limit;
-	}
+	XMVECTOR newPosition = XMLoadFloat3(&position) + movement * moveSpeed * deltaTime;
+	XMStoreFloat3(&position, newPosition);
 
+	UpdateViewMatrix();
+}
+
+void Camera::Rotate(float deltaYaw, float deltaPitch)
+{
+	yaw += deltaYaw * turnSpeed;
+	pitch += deltaPitch * turnSpeed;
+
+	pitch = clamp(pitch, -XM_PIDIV2 + 0.01f, XM_PIDIV2 - 0.01f);
+
+	XMVECTOR forward = XMVectorSet(
+		cosf(pitch) * sinf(yaw),
+		sinf(pitch),
+		cosf(pitch) * cosf(yaw),
+		0.0f
+	);
+
+	XMStoreFloat3(&target, XMLoadFloat3(&position) + forward);
 	UpdateViewMatrix();
 }
 
 void Camera::UpdateViewMatrix()
 {
-	XMVECTOR forward = XMVector3Normalize(XMVectorSet(
-		cosf(pitch) * sinf(yaw),
-		sinf(pitch),
-		cosf(pitch) * cosf(yaw),
-		0.0f
-	));
-
-	XMVECTOR positionVec = XMVectorSet(position.x, position.y, position.z, 1.0f);
-	XMVECTOR targetVec = XMVectorAdd(positionVec, forward);
-	XMVECTOR upVec = XMVectorSet(upVector.x, upVector.y, upVector.z, 0.0f);
+	XMVECTOR positionVec = XMLoadFloat3(&position);
+	XMVECTOR targetVec = XMLoadFloat3(&target);
+	XMVECTOR upVec = XMLoadFloat3(&upVector);
 
 	viewMatrix = XMMatrixLookAtLH(positionVec, targetVec, upVec);
+}
+
+void Camera::UpdateProjectionMatrix()
+{
+
 }

@@ -21,8 +21,10 @@ public:
 		UpdateViewMatrix();
 	}
 
-	void UpdateCameraRotation(const float& deltaX, const float& deltaY);
+	void Move(const XMFLOAT3& direction, float deltaTime);
+	void Rotate(float deltaYaw, float deltaPitch);
 	void UpdateViewMatrix();
+	void UpdateProjectionMatrix();
 
 private:
 
@@ -34,5 +36,7 @@ private:
 
 	float yaw = 0.f;
 	float pitch = 0.f;
+	float moveSpeed = 5.f;
+	float turnSpeed = 0.1f;
 };
 

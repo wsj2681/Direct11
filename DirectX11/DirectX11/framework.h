@@ -31,6 +31,9 @@
 #include <iostream>
 #include <string>
 #include <unordered_map>
+#include <algorithm>
+#include <cmath>
+
 using namespace std;
 using namespace DirectX;
 using Microsoft::WRL::ComPtr;

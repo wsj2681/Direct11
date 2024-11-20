@@ -34,6 +34,8 @@ void Scene::Render()
 
 void Scene::OnProcessingMouseMessage(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lParam)
 {
+	static POINT lastMousePosition = {};
+	POINT currentMousePosition;
 	switch (nMessageID) 
 	{
 	case WM_LBUTTONDOWN:
@@ -43,8 +45,22 @@ void Scene::OnProcessingMouseMessage(HWND hWnd, UINT nMessageID, WPARAM wParam, 
 	case WM_RBUTTONUP:
 		break;
 	case WM_MOUSEMOVE:
+	{
+		GetCursorPos(&currentMousePosition);
+		ScreenToClient(hWnd, &currentMousePosition);
+
+		int deltaX = currentMousePosition.x - lastMousePosition.x;
+		int deltaY = currentMousePosition.y - lastMousePosition.y;
+
+		if (wParam & MK_LBUTTON)
+		{
+			camera->Rotate(deltaX * 0.005f, deltaY * 0.005f);
+		}
+		lastMousePosition = currentMousePosition;
+	}
 		break;
-	default: break;
+	default: 
+		break;
 	}
 }
 
@@ -67,7 +83,34 @@ void Scene::OnProcessingKeyBoardMessage(HWND hWnd, UINT nMessageID, WPARAM wPara
 		default: break;
 		}
 		break;
-	default: break;
+	case WM_KEYDOWN:
+		switch (wParam)
+		{
+		case 'W':
+		{
+			camera->Move({ 0.0f, 0.0f, 1.0f }, 0.016f);
+			break;
+		}
+		case 'S':
+		{
+			camera->Move({ 0.0f, 0.0f, -1.0f }, 0.016f);
+			break;
+		}
+		case 'A':
+		{
+			camera->Move({ -1.0f, 0.0f, 0.0f }, 0.016f);
+			break;
+		}
+		case 'D':
+		{
+			camera->Move({ 1.0f, 0.0f, 0.0f }, 0.016f);
+			break;
+		}
+		default:
+			break;
+		}
+	default: 
+		break;
 	}
 }
 

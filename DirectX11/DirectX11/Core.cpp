@@ -9,8 +9,6 @@ Core::Core(HINSTANCE hInstance)
     LoadStringW(hInstance, IDC_DIRECTX11, szWindowClass, MAX_LOADSTRING);
 }
 
-Core::~Core() {}
-
 bool Core::Initialize(int nCmdShow)
 {
     if (!RegisterWindowClass())
@@ -85,7 +83,6 @@ bool Core::InitInstance(int nCmdShow)
     {
         return false;
     }
-    SetWindowLongPtr(hWnd, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(this));
 
     ShowWindow(hWnd, nCmdShow);
     UpdateWindow(hWnd);
