@@ -1,15 +1,15 @@
 #include "Shader.h"
 
-Shader::Shader(ComPtr<ID3D11Device>& device, const wchar_t* vsPath, const wchar_t* psPath)
+Shader::Shader(ComPtr<ID3D11Device>& device, const string& vsPath, const string& psPath)
 {
 	// DiffusedVertex Shader
 	ComPtr<ID3DBlob> vsBlob;
-	HR(D3DCompileFromFile(vsPath, nullptr, nullptr, "VSMain", "vs_5_0", 0, 0, vsBlob.GetAddressOf(), nullptr));
+	HR(D3DCompileFromFile(TOWSTRING(vsPath), nullptr, nullptr, "VSMain", "vs_5_0", 0, 0, vsBlob.GetAddressOf(), nullptr));
 	HR(device->CreateVertexShader(vsBlob->GetBufferPointer(), vsBlob->GetBufferSize(), nullptr, vertexShader.GetAddressOf()));
 
 	// Pixel Shader
 	ComPtr<ID3DBlob> psBlob;
-	HR(D3DCompileFromFile(psPath, nullptr, nullptr, "PSMain", "ps_5_0", 0, 0, psBlob.GetAddressOf(), nullptr));
+	HR(D3DCompileFromFile(TOWSTRING(psPath), nullptr, nullptr, "PSMain", "ps_5_0", 0, 0, psBlob.GetAddressOf(), nullptr));
 	HR(device->CreatePixelShader(psBlob->GetBufferPointer(), psBlob->GetBufferSize(), nullptr, pixelShader.GetAddressOf()));
 
 	D3D11_INPUT_ELEMENT_DESC layout[] =

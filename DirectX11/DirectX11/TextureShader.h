@@ -4,7 +4,7 @@ class TextureShader : public Shader
 {
 public:
 	TextureShader() = default;
-	TextureShader(ComPtr<ID3D11Device>& device, const wchar_t* vsPath, const wchar_t* psPath, const wchar_t* textureFile);
+	TextureShader(ComPtr<ID3D11Device>& device, const string& vsPath, const string& psPath, const string& textureFile);
 	~TextureShader();
 
 	void SetConstantBuffer(ComPtr<ID3D11Device>& device) override;
@@ -12,7 +12,7 @@ public:
 	void Bind(ComPtr<ID3D11DeviceContext>& devcon) override;
 
 private:
-	void LoadTexture(ComPtr<ID3D11Device>& device, const wchar_t* textureFile);
+	void LoadTexture(ComPtr<ID3D11Device>& device, const string& textureFile);
 
 	ComPtr<ID3D11ShaderResourceView> textureView;
 	ComPtr<ID3D11SamplerState> samplerstate;

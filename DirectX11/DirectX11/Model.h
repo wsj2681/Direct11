@@ -8,21 +8,16 @@ class Model
 public:
 
     Model() = default;
-    Model(ComPtr<ID3D11Device>& device, const 
-        vector<DiffusedVertex>& vertices, const vector<UINT>& indices, 
-        const wchar_t* vsPath, const wchar_t* psPath);
+    // 일반 도형 생성
+    Model(ComPtr<ID3D11Device>& device, 
+        const vector<DiffusedVertex>& vertices, const vector<UINT>& indices, const string& vsPath, const string& psPath);
+
+    // 
+    Model(ComPtr<ID3D11Device>& device, 
+        const vector<DiffusedVertex>& vertices, const vector<UINT>& indices, const string& vsPath, const string& psPath, const string& textureFile);
 
     Model(ComPtr<ID3D11Device>& device, 
-        const vector<DiffusedVertex>& vertices, const vector<UINT>& indices, 
-        const wchar_t* vsPath, const wchar_t* psPath, const wchar_t* textureFile);
-
-    Model(ComPtr<ID3D11Device>& device,
-        const wchar_t* objFile,
-        const wchar_t* vsPath, const wchar_t* psPath, const wchar_t* textureFile);
-
-    Model(ComPtr<ID3D11Device>& device,
-        const string& fbxFile,
-        const wchar_t* vsPath, const wchar_t* psPath, const wchar_t* textureFile);
+        const string& objFile, const string& vsPath, const string& psPath, const string& textureFile);
 
     ~Model() = default;
 
@@ -31,8 +26,8 @@ public:
 
 private:
 
-    void LoadOBJ(const wchar_t* objFile, vector<ModelVertex>& vertices, vector<UINT>& indices);
-    void LoadFBX(const string& objFile, vector<ModelVertex>& vertices, vector<UINT>& indices);
+    void LoadOBJ(const string& objFile, vector<ModelVertex>& vertices, vector<UINT>& indices);
+    void LoadFBX(const string& fbxFile, vector<ModelVertex>& vertices, vector<UINT>& indices);
     void ProcessMesh(FbxMesh* mesh, vector<ModelVertex>& vertices, vector<UINT>& indices);
 
     DiffusedMesh* diffusedMesh = nullptr;

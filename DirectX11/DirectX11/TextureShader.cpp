@@ -1,15 +1,15 @@
 #include "TextureShader.h"
 
-TextureShader::TextureShader(ComPtr<ID3D11Device>& device, const wchar_t* vsPath, const wchar_t* psPath, const wchar_t* textureFile)
+TextureShader::TextureShader(ComPtr<ID3D11Device>& device, const string& vsPath, const string& psPath, const string& textureFile)
 {
 	// DiffusedVertex Shader
 	ComPtr<ID3DBlob> vsBlob;
-	HR(D3DCompileFromFile(vsPath, nullptr, nullptr, "VSMain", "vs_5_0", 0, 0, vsBlob.GetAddressOf(), nullptr));
+	HR(D3DCompileFromFile(TOWSTRING(vsPath), nullptr, nullptr, "VSMain", "vs_5_0", 0, 0, vsBlob.GetAddressOf(), nullptr));
 	HR(device->CreateVertexShader(vsBlob->GetBufferPointer(), vsBlob->GetBufferSize(), nullptr, vertexShader.GetAddressOf()));
 
 	// Pixel Shader
 	ComPtr<ID3DBlob> psBlob;
-	HR(D3DCompileFromFile(psPath, nullptr, nullptr, "PSMain", "ps_5_0", 0, 0, psBlob.GetAddressOf(), nullptr));
+	HR(D3DCompileFromFile(TOWSTRING(psPath), nullptr, nullptr, "PSMain", "ps_5_0", 0, 0, psBlob.GetAddressOf(), nullptr));
 	HR(device->CreatePixelShader(psBlob->GetBufferPointer(), psBlob->GetBufferSize(), nullptr, pixelShader.GetAddressOf()));
 
 	LoadTexture(device, textureFile);
@@ -53,7 +53,7 @@ void TextureShader::Bind(ComPtr<ID3D11DeviceContext>& devcon)
 	devcon->PSSetSamplers(0, 1, samplerstate.GetAddressOf());
 }
 
-void TextureShader::LoadTexture(ComPtr<ID3D11Device>& device, const wchar_t* textureFile)
+void TextureShader::LoadTexture(ComPtr<ID3D11Device>& device, const string& textureFile)
 {
 	// WIC 팩토리 생성
 	ComPtr<IWICImagingFactory> wicFactory;
@@ -61,7 +61,7 @@ void TextureShader::LoadTexture(ComPtr<ID3D11Device>& device, const wchar_t* tex
 
 	// 이미지 디코더 생성
 	ComPtr<IWICBitmapDecoder> decoder;
-	HR(wicFactory->CreateDecoderFromFilename(textureFile, nullptr, GENERIC_READ, WICDecodeMetadataCacheOnLoad, &decoder));
+	HR(wicFactory->CreateDecoderFromFilename(TOWSTRING(textureFile), nullptr, GENERIC_READ, WICDecodeMetadataCacheOnLoad, &decoder));
 
 	// 첫 번째 프레임 로드
 	ComPtr<IWICBitmapFrameDecode> frame;

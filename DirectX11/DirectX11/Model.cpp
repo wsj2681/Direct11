@@ -1,7 +1,7 @@
 #include "framework.h"
 #include "Model.h"
 
-Model::Model(ComPtr<ID3D11Device>& device, const vector<DiffusedVertex>& vertices, const vector<UINT>& indices, const wchar_t* vsPath, const wchar_t* psPath)
+Model::Model(ComPtr<ID3D11Device>& device, const vector<DiffusedVertex>& vertices, const vector<UINT>& indices, const string& vsPath, const string& psPath)
 {
 	diffusedMesh = new DiffusedMesh(device, vertices, indices);
 	shader = new Shader(device, vsPath, psPath);
@@ -9,29 +9,25 @@ Model::Model(ComPtr<ID3D11Device>& device, const vector<DiffusedVertex>& vertice
 	shader->SetConstantBuffer(device);
 }
 
-Model::Model(ComPtr<ID3D11Device>& device, const vector<DiffusedVertex>& vertices, const vector<UINT>& indices, const wchar_t* vsPath, const wchar_t* psPath, const wchar_t* textureFile)
+Model::Model(ComPtr<ID3D11Device>& device, const vector<DiffusedVertex>& vertices, const vector<UINT>& indices, const string& vsPath, const string& psPath, const string& textureFile)
 {
 	diffusedMesh = new DiffusedMesh(device, vertices, indices);
 	shader = new TextureShader(device, vsPath, psPath, textureFile);
 	shader->SetConstantBuffer(device);
 }
 
-Model::Model(ComPtr<ID3D11Device>& device, const wchar_t* objFile, const wchar_t* vsPath, const wchar_t* psPath, const wchar_t* textureFile)
+Model::Model(ComPtr<ID3D11Device>& device, const string& objFile, const string& vsPath, const string& psPath, const string& textureFile)
 {
     vector<ModelVertex> vertices;
     vector<UINT> indices;
-    LoadOBJ(objFile, vertices, indices);
-
-    modelMesh = new ModelMesh(device, vertices, indices);
-    shader = new TextureShader(device, vsPath, psPath, textureFile);
-    shader->SetConstantBuffer(device);
-}
-
-Model::Model(ComPtr<ID3D11Device>& device, const string& fbxFile, const wchar_t* vsPath, const wchar_t* psPath, const wchar_t* textureFile)
-{
-    vector<ModelVertex> vertices;
-    vector<UINT> indices;
-    LoadFBX(fbxFile, vertices, indices);
+    if (objFile.back() == 'j')
+    {
+        LoadOBJ(objFile, vertices, indices);
+    }
+    else if(objFile.back() == 'x')
+    {
+        LoadFBX(objFile, vertices, indices);
+    }
 
     modelMesh = new ModelMesh(device, vertices, indices);
     shader = new TextureShader(device, vsPath, psPath, textureFile);
@@ -71,7 +67,7 @@ struct VertexHasher
     }
 };
 
-void Model::LoadOBJ(const wchar_t* objFile, vector<ModelVertex>& vertices, vector<UINT>& indices)
+void Model::LoadOBJ(const string& objFile, vector<ModelVertex>& vertices, vector<UINT>& indices)
 {
     vector<XMFLOAT3> tempPositions;
     vector<XMFLOAT3> tempNormals;
@@ -82,7 +78,7 @@ void Model::LoadOBJ(const wchar_t* objFile, vector<ModelVertex>& vertices, vecto
     ifstream file(objFile);
     if (!file.is_open()) 
     {
-        wcerr << "Failed to open file: " << objFile << endl;
+        cerr << "Failed to open file: " << objFile << endl;
         return;
     }
 

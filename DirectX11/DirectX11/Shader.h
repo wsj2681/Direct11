@@ -5,7 +5,7 @@ class Shader
 {
 public:
     Shader() = default;
-    Shader(ComPtr<ID3D11Device>& device, const wchar_t* vsPath, const wchar_t* psPath);
+    Shader(ComPtr<ID3D11Device>& device, const string& vsPath, const string& psPath);
     ~Shader();
 
     virtual void SetConstantBuffer(ComPtr<ID3D11Device>& device);
