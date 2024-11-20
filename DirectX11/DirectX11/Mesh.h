@@ -1,51 +1,20 @@
 #pragma once
 #include "framework.h"
 
-
-
-class Mesh
-{
-public:
-	Mesh() = default;
-	~Mesh();
-
-protected:
-
-	ComPtr<ID3D11Buffer> vertexBuffer;
-	ComPtr<ID3D11Buffer> indexBuffer;
-	UINT indexCount = 0;
-public:
-
-	virtual void Render(ComPtr<ID3D11DeviceContext>& devcon);
-};
-
 struct DiffusedVertex
 {
 	XMFLOAT3 position;
 	XMFLOAT4 color;
 };
 
-class DiffusedMesh : public Mesh
-{
-public:
-
-	DiffusedMesh() = default;
-	DiffusedMesh(ComPtr<ID3D11Device>& device, const vector<DiffusedVertex>& vertices, const vector<UINT>& indices);
-	~DiffusedMesh() = default;
-
-private:
-
-	void CreateVertexBuffer(ComPtr<ID3D11Device>& device, const vector<DiffusedVertex>& vertices);
-	void CreateIndexBuffer(ComPtr<ID3D11Device>& device, const vector<UINT>& indices);
-};
-
-struct ModelVertex 
+struct ModelVertex
 {
 	XMFLOAT3 position;
 	XMFLOAT3 normal;
 	XMFLOAT2 uv;
 
-	bool operator==(const ModelVertex& other) const {
+	bool operator==(const ModelVertex& other) const
+	{
 		return position.x == other.position.x &&
 			position.y == other.position.y &&
 			position.z == other.position.z &&
@@ -55,21 +24,62 @@ struct ModelVertex
 			uv.x == other.uv.x &&
 			uv.y == other.uv.y;
 	}
-
 };
 
-class ModelMesh : public Mesh
+template <typename TVertex>
+class Mesh
 {
 public:
+	Mesh() = default;
+	Mesh(ComPtr<ID3D11Device>& device, const vector<TVertex>& vertices, const vector<UINT>& indices)
+	{
+		CreateVertexBuffer(device, vertices);
+		CreateIndexBuffer(device, indices);
+		indexCount = indices.size();
+	}
+	~Mesh() = default;
 
-	ModelMesh() = default;
-	ModelMesh(ComPtr<ID3D11Device>& device, const vector<ModelVertex>& vertices, const vector<UINT>& indices);
-	~ModelMesh() = default;
+protected:
+	void CreateVertexBuffer(ComPtr<ID3D11Device>& device, const vector<TVertex>& vertices)
+	{
+		D3D11_BUFFER_DESC bufferdesc = {};
+		bufferdesc.Usage = D3D11_USAGE_DEFAULT;
+		bufferdesc.ByteWidth = static_cast<UINT>(vertices.size() * sizeof(TVertex));
+		bufferdesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+		bufferdesc.CPUAccessFlags = 0;
 
-	void Render(ComPtr<ID3D11DeviceContext>& devcon) override;
+		D3D11_SUBRESOURCE_DATA initdata = {};
+		initdata.pSysMem = vertices.data();
 
-private:
+		HR(device->CreateBuffer(&bufferdesc, &initdata, vertexBuffer.GetAddressOf()));
+	}
+	void CreateIndexBuffer(ComPtr<ID3D11Device>& device, const vector<UINT>& indices)
+	{
+		D3D11_BUFFER_DESC bufferdesc = {};
+		bufferdesc.Usage = D3D11_USAGE_DEFAULT;
+		bufferdesc.ByteWidth = static_cast<UINT>(indices.size() * sizeof(UINT));
+		bufferdesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
 
-	void CreateVertexBuffer(ComPtr<ID3D11Device>& device, const vector<ModelVertex>& vertices);
-	void CreateIndexBuffer(ComPtr<ID3D11Device>& device, const vector<UINT>& indices);
+		D3D11_SUBRESOURCE_DATA initdata = {};
+		initdata.pSysMem = indices.data();
+
+		HR(device->CreateBuffer(&bufferdesc, &initdata, indexBuffer.GetAddressOf()));
+	}
+
+	ComPtr<ID3D11Buffer> vertexBuffer;
+	ComPtr<ID3D11Buffer> indexBuffer;
+	size_t indexCount = 0;
+
+public:
+
+	void Render(ComPtr<ID3D11DeviceContext>& devcon)
+	{
+		UINT stride = sizeof(TVertex);
+		UINT offset = 0;
+		devcon->IASetVertexBuffers(0, 1, vertexBuffer.GetAddressOf(), &stride, &offset);
+		devcon->IASetIndexBuffer(indexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
+
+		devcon->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+		devcon->DrawIndexed(indexCount, 0, 0);
+	}
 };

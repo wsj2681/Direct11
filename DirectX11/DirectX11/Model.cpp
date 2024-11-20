@@ -1,21 +1,6 @@
 #include "framework.h"
 #include "Model.h"
 
-Model::Model(ComPtr<ID3D11Device>& device, const vector<DiffusedVertex>& vertices, const vector<UINT>& indices, const string& vsPath, const string& psPath)
-{
-	diffusedMesh = new DiffusedMesh(device, vertices, indices);
-	shader = new Shader(device, vsPath, psPath);
-	
-	shader->SetConstantBuffer(device);
-}
-
-Model::Model(ComPtr<ID3D11Device>& device, const vector<DiffusedVertex>& vertices, const vector<UINT>& indices, const string& vsPath, const string& psPath, const string& textureFile)
-{
-	diffusedMesh = new DiffusedMesh(device, vertices, indices);
-	shader = new TextureShader(device, vsPath, psPath, textureFile);
-	shader->SetConstantBuffer(device);
-}
-
 Model::Model(ComPtr<ID3D11Device>& device, const string& objFile, const string& vsPath, const string& psPath, const string& textureFile)
 {
     vector<ModelVertex> vertices;
@@ -29,7 +14,7 @@ Model::Model(ComPtr<ID3D11Device>& device, const string& objFile, const string& 
         LoadFBX(objFile, vertices, indices);
     }
 
-    modelMesh = new ModelMesh(device, vertices, indices);
+    modelMesh = new Mesh<ModelVertex>(device, vertices, indices);
     shader = new TextureShader(device, vsPath, psPath, textureFile);
     shader->SetConstantBuffer(device);
 }
@@ -46,14 +31,7 @@ void Model::Render(ComPtr<ID3D11DeviceContext>& devcon, const XMMATRIX& view, co
 	shader->UpdateConstantBuffer(devcon, worldMatrix, view, projection);
 	shader->Bind(devcon);
 
-	if (diffusedMesh)
-	{
-		diffusedMesh->Render(devcon);
-	}
-	else if (modelMesh)
-	{
-		modelMesh->Render(devcon);
-	}
+    modelMesh->Render(devcon);
 }
 
 struct VertexHasher 
