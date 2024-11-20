@@ -24,11 +24,6 @@ bool Core::Initialize(int nCmdShow)
 
     scene = make_unique<Scene>(hWnd);
 
-    POINT currentMousePosition;
-    GetCursorPos(&currentMousePosition);
-    ScreenToClient(hWnd, &currentMousePosition);
-    lastMousePosition = currentMousePosition;
-
     return true;
 }
 
@@ -99,39 +94,22 @@ bool Core::InitInstance(int nCmdShow)
 
 LRESULT CALLBACK Core::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-    Core* core = reinterpret_cast<Core*>(GetWindowLongPtr(hWnd, GWLP_USERDATA));
-
     switch (message)
     {
     case WM_CREATE:
     {
-        LPCREATESTRUCT createStruct = reinterpret_cast<LPCREATESTRUCT>(lParam);
-        SetWindowLongPtr(hWnd, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(createStruct->lpCreateParams));
-        RECT clientRect;
-        GetClientRect(hWnd, &clientRect);
-        POINT center = { (clientRect.right - clientRect.left) / 2, (clientRect.bottom - clientRect.top) / 2 };
-        ClientToScreen(hWnd, &center);
-        SetCursorPos(center.x, center.y);
         break;
     }
+    case WM_SIZE:
+    case WM_LBUTTONDOWN:
+    case WM_LBUTTONUP:
+    case WM_RBUTTONDOWN:
+    case WM_RBUTTONUP:
     case WM_MOUSEMOVE:
-    {
-        POINT currentMousePosition;
-        GetCursorPos(&currentMousePosition);
-
-        float deltaX = static_cast<float>(currentMousePosition.x - core->lastMousePosition.x);
-        float deltaY = static_cast<float>(currentMousePosition.y - core->lastMousePosition.y);
-
-        //core->device->GetCamera()->UpdateCameraRotation(deltaX, deltaY);
-        //core->lastMousePosition = currentMousePosition;
-        break;
-    }
+    case WM_KEYDOWN:
     case WM_KEYUP:
     {
-        if (wParam == VK_ESCAPE)
-        {
-            PostQuitMessage(0);
-        }
+        Core::getInstance().scene->OnProcessingWindowMessage(hWnd, message, wParam, lParam);
         break;
     }
     case WM_DESTROY:

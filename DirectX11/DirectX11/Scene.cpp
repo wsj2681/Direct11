@@ -10,57 +10,7 @@ Scene::Scene(HWND hWnd)
 		XMFLOAT3(0.0f, 1.0f, 0.0f)   // UpVector
 	);
 
-	UINT vertexCount = 5;
-	const float radius = 0.5f;
-	const float angleIncrement = XM_2PI / vertexCount;
-
-	vector<DiffusedVertex> vertices(vertexCount);
-	for (int i = 0; i < vertexCount; ++i)
-	{
-		float angle = i * angleIncrement;
-		vertices.at(i) = { {radius * sin(angle), radius * cos(angle), 0.f}, GenerateRandomColor() };
-	}
-
-	vector<UINT> indices;
-	for (UINT i = 1; i < vertexCount - 1; ++i)
-	{
-		indices.push_back(0);
-		indices.push_back(i);
-		indices.push_back(i + 1);
-	}
-
-	
-	vector<DiffusedVertex> cubevertices = {
-	{{-1.0f, +1.0f, -1.0f}, {1.0f, 0.0f, 0.0f, 1.0f}}, // 0
-	{{+1.0f, +1.0f, -1.0f}, {0.0f, 1.0f, 0.0f, 1.0f}}, // 1
-	{{+1.0f, +1.0f, +1.0f}, {0.0f, 0.0f, 1.0f, 1.0f}}, // 2
-	{{-1.0f, +1.0f, +1.0f}, {1.0f, 1.0f, 0.0f, 1.0f}}, // 3
-	{{-1.0f, -1.0f, -1.0f}, {1.0f, 0.0f, 1.0f, 1.0f}}, // 4
-	{{+1.0f, -1.0f, -1.0f}, {0.5f, 0.5f, 0.5f, 1.0f}}, // 5
-	{{+1.0f, -1.0f, +1.0f}, {0.0f, 1.0f, 1.0f, 1.0f}}, // 6
-	{{-1.0f, -1.0f, +1.0f}, {1.0f, 0.5f, 0.0f, 1.0f}}, // 7
-	};
-
-	vector<UINT> cubeindices = {
-		// Front face edges
-		3,1,0,
-		2,1,3,
-		0,5,4,
-		1,5,0,
-		3,4,7,
-		0,4,3,
-		1,6,5,
-		2,6,1,
-		2,7,6,
-		3,7,2,
-		6,4,5,
-		7,4,6
-	};
-
-	//model = new Model(device.get()->GetDevice(), vertices, indices, L"textureShader.hlsl", L"textureShader.hlsl", L"sample.dds");
-	//model = new Model(device.get()->GetDevice(), cubevertices, cubeindices, L"triangleShader.hlsl", L"triangleShader.hlsl");
-
-	model = new Model(device.get()->GetDevice(), L"FinalBaseMesh.obj", L"textureShader.hlsl", L"textureShader.hlsl", L"sample.dds");
+	model = new Model(device.get()->GetDevice(), "FinalBaseMesh.obj", "textureShader.hlsl", "textureShader.hlsl", "sample.dds");
 }
 
 void Scene::Render()
@@ -77,7 +27,70 @@ void Scene::Render()
 	if (model)
 	{
 		model->Render(device->GetDeviceContext(), camera->GetViewMatrix(), camera->GetProjectionMatrix());
-
 	}
+
 	device->Render();
+}
+
+void Scene::OnProcessingMouseMessage(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lParam)
+{
+	switch (nMessageID) 
+	{
+	case WM_LBUTTONDOWN:
+	case WM_RBUTTONDOWN:
+		break;
+	case WM_LBUTTONUP:
+	case WM_RBUTTONUP:
+		break;
+	case WM_MOUSEMOVE:
+		break;
+	default: break;
+	}
+}
+
+void Scene::OnProcessingKeyBoardMessage(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lParam)
+{
+	switch (nMessageID) 
+	{
+	case WM_KEYUP:
+		switch (wParam) 
+		{
+		case VK_ESCAPE:
+			::PostQuitMessage(0);
+			break;
+		case VK_RETURN:
+			break;
+		case VK_F8:
+			break;
+		case VK_F9:
+			break;
+		default: break;
+		}
+		break;
+	default: break;
+	}
+}
+
+LRESULT Scene::OnProcessingWindowMessage(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lParam)
+{
+	switch (nMessageID)
+	{
+	case WM_SIZE:
+		break;
+	case WM_LBUTTONDOWN:
+	case WM_RBUTTONDOWN:
+	case WM_LBUTTONUP:
+	case WM_RBUTTONUP:
+	case WM_MOUSEMOVE:
+		OnProcessingMouseMessage(hWnd, nMessageID, wParam, lParam);
+		break;
+	case WM_KEYDOWN:
+	case WM_KEYUP:
+		OnProcessingKeyBoardMessage(hWnd, nMessageID, wParam, lParam);
+		break;
+	default:
+		break;
+	}
+
+	return 0;
 }

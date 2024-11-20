@@ -10,16 +10,18 @@ public:
 	Scene(HWND hWnd);
 	~Scene() = default;
 
+	void Render();
 private:
 	
 	unique_ptr<DX11Device> device;
-
 	unique_ptr<Camera> camera;
-
 	Model* model = nullptr;
+
+	void OnProcessingMouseMessage(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lParam);
+	void OnProcessingKeyBoardMessage(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lParam);
 
 public:
 
-	void Render();
+	LRESULT OnProcessingWindowMessage(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lParam);
 };
 
