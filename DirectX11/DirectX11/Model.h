@@ -11,9 +11,9 @@ public:
     //Model(ComPtr<ID3D11Device>& device, const vector<DiffusedVertex>& vertices, const vector<UINT>& indices, const string& vsPath, const string& psPath); 
     //Model(ComPtr<ID3D11Device>& device, const vector<DiffusedVertex>& vertices, const vector<UINT>& indices, const string& vsPath, const string& psPath, const string& textureFile);
 
-    Model(ComPtr<ID3D11Device>& device, const string& objFile, const string& vsPath, const string& psPath, const string& textureFile);
+    Model(ComPtr<ID3D11Device>& device, ComPtr<ID3D11DeviceContext>& devcon, const string& objFile, const string& vsPath, const string& psPath, const string& textureFile);
 
-    ~Model() = default;
+    ~Model();
 
     void Update();
     void Render(ComPtr<ID3D11DeviceContext>& devcon, const XMMATRIX& view, const XMMATRIX& projection);

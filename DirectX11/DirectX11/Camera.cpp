@@ -56,7 +56,7 @@ void Camera::Move(const XMFLOAT3& direction, float deltaTime)
 void Camera::Rotate(float deltaYaw, float deltaPitch)
 {
 	yaw += deltaYaw * turnSpeed;
-	pitch += deltaPitch * turnSpeed;
+	pitch -= deltaPitch * turnSpeed;
 
 	pitch = clamp(pitch, -XM_PIDIV2 + 0.01f, XM_PIDIV2 - 0.01f);
 

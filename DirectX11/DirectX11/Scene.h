@@ -8,7 +8,7 @@ class Scene
 public:
 	Scene() = default;
 	Scene(HWND hWnd);
-	~Scene() = default;
+	~Scene();
 
 	void Render();
 private:

@@ -9,6 +9,12 @@ DX11Device::DX11Device(HWND hWnd)
 
 DX11Device::~DX11Device()
 {
+	ComPtr<ID3D11Debug> debugInterface;
+	if (SUCCEEDED(device.As(&debugInterface))) 
+	{
+		debugInterface->ReportLiveDeviceObjects(D3D11_RLDO_DETAIL);
+	}
+
 	SAFE_RESET(rtv);
 	SAFE_RESET(dsv);
 	SAFE_RESET(devcon);

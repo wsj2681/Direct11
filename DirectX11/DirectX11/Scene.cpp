@@ -10,7 +10,14 @@ Scene::Scene(HWND hWnd)
 		XMFLOAT3(0.0f, 1.0f, 0.0f)   // UpVector
 	);
 
-	model = new Model(device.get()->GetDevice(), "FinalBaseMesh.obj", "textureShader.hlsl", "textureShader.hlsl", "sample.dds");
+	model = new Model(device.get()->GetDevice(),device.get()->GetDeviceContext(), "baseball.fbx", "textureShader.hlsl", "textureShader.hlsl", "baseball.png");
+}
+
+Scene::~Scene()
+{
+	model->~Model();
+	camera.release();
+	device.release();
 }
 
 void Scene::Render()

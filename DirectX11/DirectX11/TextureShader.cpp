@@ -1,6 +1,6 @@
 #include "TextureShader.h"
 
-TextureShader::TextureShader(ComPtr<ID3D11Device>& device, const string& vsPath, const string& psPath, const string& textureFile)
+TextureShader::TextureShader(ComPtr<ID3D11Device>& device, ComPtr<ID3D11DeviceContext>& devcon, const string& vsPath, const string& psPath, const string& textureFile)
 {
 	// DiffusedVertex Shader
 	ComPtr<ID3DBlob> vsBlob;
@@ -28,6 +28,7 @@ TextureShader::TextureShader(ComPtr<ID3D11Device>& device, const string& vsPath,
 	samplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
 	samplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
 	HR(device->CreateSamplerState(&samplerDesc, samplerstate.GetAddressOf()));
+	devcon->PSSetSamplers(0, 1, samplerstate.GetAddressOf());
 }
 
 TextureShader::~TextureShader()

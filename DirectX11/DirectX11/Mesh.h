@@ -35,9 +35,13 @@ public:
 	{
 		CreateVertexBuffer(device, vertices);
 		CreateIndexBuffer(device, indices);
-		indexCount = indices.size();
+		indexCount = static_cast<UINT>(indices.size());
 	}
-	~Mesh() = default;
+	~Mesh()
+	{
+		SAFE_RESET(vertexBuffer);
+		SAFE_RESET(indexBuffer);
+	}
 
 protected:
 	void CreateVertexBuffer(ComPtr<ID3D11Device>& device, const vector<TVertex>& vertices)
@@ -68,7 +72,7 @@ protected:
 
 	ComPtr<ID3D11Buffer> vertexBuffer;
 	ComPtr<ID3D11Buffer> indexBuffer;
-	size_t indexCount = 0;
+	UINT indexCount = 0;
 
 public:
 

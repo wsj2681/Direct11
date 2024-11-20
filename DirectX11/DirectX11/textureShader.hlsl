@@ -27,7 +27,7 @@ PSInput VSMain(VSInput input)
 	output.position = mul(pos, world);
 	output.position = mul(output.position, view);
 	output.position = mul(output.position, projection);
-	output.texcoord = input.texcoord;
+	output.texcoord = float2(input.texcoord.x, 1.0f - input.texcoord.y);
 	return output;
 }
 

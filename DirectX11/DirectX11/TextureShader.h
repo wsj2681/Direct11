@@ -4,7 +4,7 @@ class TextureShader : public Shader
 {
 public:
 	TextureShader() = default;
-	TextureShader(ComPtr<ID3D11Device>& device, const string& vsPath, const string& psPath, const string& textureFile);
+	TextureShader(ComPtr<ID3D11Device>& device, ComPtr<ID3D11DeviceContext>& devcon, const string& vsPath, const string& psPath, const string& textureFile);
 	~TextureShader();
 
 	void SetConstantBuffer(ComPtr<ID3D11Device>& device) override;

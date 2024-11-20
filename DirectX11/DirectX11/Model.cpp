@@ -1,22 +1,28 @@
 #include "framework.h"
 #include "Model.h"
 
-Model::Model(ComPtr<ID3D11Device>& device, const string& objFile, const string& vsPath, const string& psPath, const string& textureFile)
+Model::Model(ComPtr<ID3D11Device>& device, ComPtr<ID3D11DeviceContext>& devcon, const string& objFile, const string& vsPath, const string& psPath, const string& textureFile)
 {
     vector<ModelVertex> vertices;
     vector<UINT> indices;
-    if (objFile.back() == 'j')
+    if (objFile.back() == 'j')// *.obj
     {
         LoadOBJ(objFile, vertices, indices);
     }
-    else if(objFile.back() == 'x')
+    else if(objFile.back() == 'x') // *.fbx
     {
         LoadFBX(objFile, vertices, indices);
     }
 
     modelMesh = new Mesh<ModelVertex>(device, vertices, indices);
-    shader = new TextureShader(device, vsPath, psPath, textureFile);
+    shader = new TextureShader(device, devcon, vsPath, psPath, textureFile);
     shader->SetConstantBuffer(device);
+}
+
+Model::~Model()
+{
+    modelMesh->~Mesh();
+    shader->~Shader();
 }
 
 void Model::Update()
@@ -45,6 +51,23 @@ struct VertexHasher
     }
 };
 
+struct VertexHash {
+    size_t operator()(const ModelVertex& vertex) const {
+        return std::hash<float>()(vertex.position.x) ^
+            std::hash<float>()(vertex.position.y) ^
+            std::hash<float>()(vertex.position.z) ^
+            std::hash<float>()(vertex.uv.x) ^
+            std::hash<float>()(vertex.uv.y);
+    }
+    bool operator()(const ModelVertex& v1, const ModelVertex& v2) const {
+        return v1.position.x == v2.position.x &&
+            v1.position.y == v2.position.y &&
+            v1.position.z == v2.position.z &&
+            v1.uv.x == v2.uv.x &&
+            v1.uv.y == v2.uv.y;
+    }
+};
+
 void Model::LoadOBJ(const string& objFile, vector<ModelVertex>& vertices, vector<UINT>& indices)
 {
     vector<XMFLOAT3> tempPositions;
@@ -70,28 +93,28 @@ void Model::LoadOBJ(const string& objFile, vector<ModelVertex>& vertices, vector
         if (prefix == "v") 
         {
             // Vertex position
-            XMFLOAT3 position;
+            XMFLOAT3 position = {};
             ss >> position.x >> position.y >> position.z;
             tempPositions.push_back(position);
         }
         else if (prefix == "vn") 
         {
             // Vertex normal
-            XMFLOAT3 normal;
+            XMFLOAT3 normal = {};
             ss >> normal.x >> normal.y >> normal.z;
             tempNormals.push_back(normal);
         }
         else if (prefix == "vt") 
         {
             // Texture coordinate
-            XMFLOAT2 texcoord;
+            XMFLOAT2 texcoord = {};
             ss >> texcoord.x >> texcoord.y;
             tempUvs.push_back(texcoord);
         }
         else if (prefix == "f") 
         {
             // Face (polygon)
-            string vertexData;
+            string vertexData = "";
             for (int i = 0; i < 3; ++i) 
             {
                 ss >> vertexData;
@@ -152,6 +175,9 @@ void Model::LoadFBX(const string& fbxFile, vector<ModelVertex>& vertices, vector
         return;
     }
 
+    FbxGeometryConverter geometryConverter(manager);
+    geometryConverter.Triangulate(scene, true);
+
     FbxNode* rootNode = scene->GetRootNode();
     if (rootNode)
     {
@@ -165,12 +191,18 @@ void Model::LoadFBX(const string& fbxFile, vector<ModelVertex>& vertices, vector
             }
         }
     }
+
+    importer->Destroy();
+    manager->Destroy();
 }
 
 void Model::ProcessMesh(FbxMesh* mesh, vector<ModelVertex>& vertices, vector<UINT>& indices)
 {
     int vertexCount = mesh->GetControlPointsCount();
     FbxVector4* controlPoints = mesh->GetControlPoints();
+
+    unordered_map<ModelVertex, uint32_t, VertexHash, VertexHash> uniqueVertices;
+
     vertices.reserve(vertexCount);
 
     int polygonCount = mesh->GetPolygonCount();
@@ -217,8 +249,12 @@ void Model::ProcessMesh(FbxMesh* mesh, vector<ModelVertex>& vertices, vector<UIN
 
             // Create and store the vertex
             ModelVertex vertex = { position, normal, texcoord };
-            vertices.push_back(vertex);
-            indices.push_back(static_cast<uint32_t>(vertices.size() - 1));
+            if (uniqueVertices.count(vertex) == 0)
+            {
+                uniqueVertices[vertex] = static_cast<uint32_t>(vertices.size());
+                vertices.push_back(vertex);
+            }
+            indices.push_back(uniqueVertices[vertex]);
         }
     }
 }
