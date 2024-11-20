@@ -140,4 +140,9 @@
       <Filter>소스 파일\미사용</Filter>
     </None>
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="cube vertex.txt">
+      <Filter>소스 파일\미사용</Filter>
+    </Text>
+  </ItemGroup>
 </Project>
