@@ -78,3 +78,5 @@ inline XMFLOAT4 GenerateRandomColor()
 #endif
 
 #define SAFE_RESET(x) if((x)) x.Reset()
+
+#define TOWSTRING(x) wstring((x).begin(), (x).end()).c_str()
