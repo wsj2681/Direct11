@@ -43,9 +43,9 @@ int Core::Run()
     return static_cast<int>(msg.wParam);
 }
 
-bool Core::RegisterWindowClass()
+bool Core::RegisterWindowClass() const
 {
-    WNDCLASSEXW wcex;
+    WNDCLASSEXW wcex = {};
     wcex.cbSize = sizeof(WNDCLASSEX);
     wcex.style = CS_HREDRAW | CS_VREDRAW;
     wcex.lpfnWndProc = WndProc;

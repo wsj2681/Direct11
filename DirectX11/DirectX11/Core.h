@@ -42,7 +42,7 @@ protected:
     static LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 
 private:
-    bool RegisterWindowClass();
+    bool RegisterWindowClass() const;
     bool InitInstance(int nCmdShow);
 
     HINSTANCE hInstance;
