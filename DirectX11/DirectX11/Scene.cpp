@@ -80,10 +80,12 @@ void Scene::OnProcessingKeyBoardMessage(HWND hWnd, UINT nMessageID, WPARAM wPara
 			break;
 		case VK_F9:
 			break;
-		default: break;
+		default: 
+			break;
 		}
 		break;
 	case WM_KEYDOWN:
+	{
 		switch (wParam)
 		{
 		case 'W':
@@ -109,6 +111,7 @@ void Scene::OnProcessingKeyBoardMessage(HWND hWnd, UINT nMessageID, WPARAM wPara
 		default:
 			break;
 		}
+	}
 	default: 
 		break;
 	}
