@@ -12,8 +12,7 @@ public:
 	void Bind(ComPtr<ID3D11DeviceContext>& devcon) override;
 
 private:
-	void LoadTexture(ComPtr<ID3D11Device>& device, const string& textureFile);
-	
+
 	ComPtr<ID3D11ShaderResourceView> textureView;
 	ComPtr<ID3D11SamplerState> samplerstate;
 

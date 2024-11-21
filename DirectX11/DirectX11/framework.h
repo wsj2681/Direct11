@@ -42,15 +42,7 @@ using Microsoft::WRL::ComPtr;
 #pragma comment(lib,"d3d11.lib")
 #pragma comment(lib,"dxgi.lib")
 
-#pragma warning(push)
-#pragma warning(disable : 26495)
-#pragma warning(disable : 26813)
-#include <fbxsdk.h>
 
-#pragma comment(lib, "libfbxsdk.lib")
-#pragma comment(lib, "libxml2.lib")
-
-#pragma warning(pop)
 
 #define FRAMEBUFFER_WIDTH 800
 #define FRAMEBUFFER_HEIGHT 600

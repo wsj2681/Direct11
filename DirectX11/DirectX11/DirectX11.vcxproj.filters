@@ -45,6 +45,9 @@
     <Filter Include="소스 파일\미사용">
       <UniqueIdentifier>{6745c2a8-9a1c-4854-a06a-aa8909797f9d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\99.Common\Loader">
+      <UniqueIdentifier>{93ab7751-d577-40eb-84ee-cf0494223d46}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="targetver.h">
@@ -83,14 +86,14 @@
     <ClInclude Include="TextureShader.h">
       <Filter>소스 파일\03.Model\02.Shader</Filter>
     </ClInclude>
-    <ClInclude Include="tiny_obj_loader.h">
-      <Filter>소스 파일\99.Common</Filter>
-    </ClInclude>
     <ClInclude Include="DDSTextureLoader11.h">
-      <Filter>소스 파일\99.Common</Filter>
+      <Filter>소스 파일\99.Common\Loader</Filter>
+    </ClInclude>
+    <ClInclude Include="tiny_obj_loader.h">
+      <Filter>소스 파일\99.Common\Loader</Filter>
     </ClInclude>
     <ClInclude Include="WICTextureLoader11.h">
-      <Filter>소스 파일\99.Common</Filter>
+      <Filter>소스 파일\99.Common\Loader</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -121,14 +124,14 @@
     <ClCompile Include="TextureShader.cpp">
       <Filter>소스 파일\03.Model\02.Shader</Filter>
     </ClCompile>
-    <ClCompile Include="tiny_obj_loader.cc">
-      <Filter>소스 파일\99.Common</Filter>
-    </ClCompile>
     <ClCompile Include="DDSTextureLoader11.cpp">
-      <Filter>소스 파일\99.Common</Filter>
+      <Filter>소스 파일\99.Common\Loader</Filter>
+    </ClCompile>
+    <ClCompile Include="tiny_obj_loader.cc">
+      <Filter>소스 파일\99.Common\Loader</Filter>
     </ClCompile>
     <ClCompile Include="WICTextureLoader11.cpp">
-      <Filter>소스 파일\99.Common</Filter>
+      <Filter>소스 파일\99.Common\Loader</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

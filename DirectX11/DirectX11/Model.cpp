@@ -6,9 +6,9 @@ Model::Model(ComPtr<ID3D11Device>& device, ComPtr<ID3D11DeviceContext>& devcon, 
 {
     vector<ModelVertex> vertices;
     vector<UINT> indices;
+
     if (objFile.back() == 'j')// *.obj
     {
-        //LoadOBJ(objFile, vertices, indices);
         string path = "Resource\\orkobj.png";
         LoadOBJ("Resource\\orkobj.obj", "Resource\\orkobj.mtl", vertices, indices, path);
     }
@@ -23,8 +23,6 @@ Model::Model(ComPtr<ID3D11Device>& device, ComPtr<ID3D11DeviceContext>& devcon, 
     modelMesh = new Mesh<ModelVertex>(device, vertices, indices);
     shader = new TextureShader(device, devcon, vsPath, psPath, textureFile);
     shader->SetConstantBuffer(device);
-
-
 }
 
 Model::~Model()
@@ -48,123 +46,17 @@ void Model::Render(ComPtr<ID3D11DeviceContext>& devcon, const XMMATRIX& view, co
     modelMesh->Render(devcon);
 }
 
-struct VertexHasher 
-{
-    size_t operator()(const ModelVertex& v) const 
-    {
-        auto hash1 = hash<float>()(v.position.x) ^ hash<float>()(v.position.y) ^ hash<float>()(v.position.z);
-        auto hash2 = hash<float>()(v.normal.x) ^ hash<float>()(v.normal.y) ^ hash<float>()(v.normal.z);
-        auto hash3 = hash<float>()(v.uv.x) ^ hash<float>()(v.uv.y);
-        return hash1 ^ hash2 ^ hash3;
-    }
-};
-
-struct VertexHash {
-    size_t operator()(const ModelVertex& vertex) const {
-        return std::hash<float>()(vertex.position.x) ^
-            std::hash<float>()(vertex.position.y) ^
-            std::hash<float>()(vertex.position.z) ^
-            std::hash<float>()(vertex.uv.x) ^
-            std::hash<float>()(vertex.uv.y);
-    }
-    bool operator()(const ModelVertex& v1, const ModelVertex& v2) const {
-        return v1.position.x == v2.position.x &&
-            v1.position.y == v2.position.y &&
-            v1.position.z == v2.position.z &&
-            v1.uv.x == v2.uv.x &&
-            v1.uv.y == v2.uv.y;
-    }
-};
-
-void Model::LoadOBJ(const string& objFile, vector<ModelVertex>& vertices, vector<UINT>& indices)
-{
-    vector<XMFLOAT3> tempPositions;
-    vector<XMFLOAT3> tempNormals;
-    vector<XMFLOAT2> tempUvs;
-
-    unordered_map<ModelVertex, uint32_t, VertexHasher> uniqueVertices;
-
-    ifstream file(objFile);
-    if (!file.is_open()) 
-    {
-        cerr << "Failed to open file: " << objFile << endl;
-        return;
-    }
-
-    string line;
-    while (getline(file, line)) 
-    {
-        istringstream ss(line);
-        string prefix;
-        ss >> prefix;
-
-        if (prefix == "v") 
-        {
-            // Vertex position
-            XMFLOAT3 position = {};
-            ss >> position.x >> position.y >> position.z;
-            tempPositions.push_back(position);
-        }
-        else if (prefix == "vn") 
-        {
-            // Vertex normal
-            XMFLOAT3 normal = {};
-            ss >> normal.x >> normal.y >> normal.z;
-            tempNormals.push_back(normal);
-        }
-        else if (prefix == "vt") 
-        {
-            // Texture coordinate
-            XMFLOAT2 texcoord = {};
-            ss >> texcoord.x >> texcoord.y;
-            tempUvs.push_back(texcoord);
-        }
-        else if (prefix == "f") 
-        {
-            // Face (polygon)
-            string vertexData = "";
-            for (int i = 0; i < 3; ++i) 
-            {
-                ss >> vertexData;
-
-                istringstream vs(vertexData);
-                string v, t, n;
-                getline(vs, v, '/');
-                getline(vs, t, '/');
-                getline(vs, n, '/');
-
-                int vIndex = stoi(v) - 1;
-                int tIndex = t.empty() ? -1 : stoi(t) - 1;
-                int nIndex = n.empty() ? -1 : stoi(n) - 1;
-
-                ModelVertex vertex{};
-                vertex.position = tempPositions[vIndex];
-                if (nIndex >= 0) vertex.normal = tempNormals[nIndex];
-                if (tIndex >= 0) vertex.uv = tempUvs[tIndex];
-
-                if (uniqueVertices.count(vertex) == 0)
-                {
-                    uniqueVertices[vertex] = static_cast<uint32_t>(vertices.size());
-                    vertices.push_back(vertex);
-                }
-                indices.push_back(uniqueVertices[vertex]);
-            }
-        }
-    }
-
-    file.close();
-}
 
 void Model::LoadOBJ(const string& objFile, const string& mtlBasePath, vector<ModelVertex>& vertices, vector<UINT>& indices, string& textureFile)
 {
     tinyobj::attrib_t attrib;
-    std::vector<tinyobj::shape_t> shapes;
-    std::vector<tinyobj::material_t> materials;
-    std::string warn, err;
+    vector<tinyobj::shape_t> shapes;
+    vector<tinyobj::material_t> materials;
+    string warn, err;
 
     if (!tinyobj::LoadObj(&attrib, &shapes, &materials, &warn, &err, objFile.c_str(), mtlBasePath.c_str())) 
     {
-        std::cerr << "Failed to load OBJ file: " << warn << err << std::endl;
+        cerr << "Failed to load OBJ file: " << warn << err << endl;
         return;
     }
 
@@ -223,6 +115,7 @@ void Model::LoadOBJ(const string& objFile, const string& mtlBasePath, vector<Mod
 }
 
 
+
 void Model::LoadFBX(const string& fbxFile, vector<ModelVertex>& vertices, vector<UINT>& indices)
 {
     FbxManager* manager = FbxManager::Create();
@@ -274,6 +167,27 @@ void Model::LoadFBX(const string& fbxFile, vector<ModelVertex>& vertices, vector
     importer->Destroy();
     manager->Destroy();
 }
+
+
+struct VertexHash 
+{
+    size_t operator()(const ModelVertex& vertex) const 
+    {
+        return hash<float>()(vertex.position.x) ^
+            hash<float>()(vertex.position.y) ^
+            hash<float>()(vertex.position.z) ^
+            hash<float>()(vertex.uv.x) ^
+            hash<float>()(vertex.uv.y);
+    }
+    bool operator()(const ModelVertex& v1, const ModelVertex& v2) const 
+    {
+        return v1.position.x == v2.position.x &&
+            v1.position.y == v2.position.y &&
+            v1.position.z == v2.position.z &&
+            v1.uv.x == v2.uv.x &&
+            v1.uv.y == v2.uv.y;
+    }
+};
 
 void Model::ProcessMesh(FbxMesh* mesh, vector<ModelVertex>& vertices, vector<UINT>& indices)
 {
