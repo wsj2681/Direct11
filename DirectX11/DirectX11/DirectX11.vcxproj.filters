@@ -95,6 +95,9 @@
     <ClInclude Include="WICTextureLoader11.h">
       <Filter>소스 파일\99.Common\Loader</Filter>
     </ClInclude>
+    <ClInclude Include="LightShader.h">
+      <Filter>소스 파일\03.Model\02.Shader</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -133,6 +136,9 @@
     <ClCompile Include="WICTextureLoader11.cpp">
       <Filter>소스 파일\99.Common\Loader</Filter>
     </ClCompile>
+    <ClCompile Include="LightShader.cpp">
+      <Filter>소스 파일\03.Model\02.Shader</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="DirectX11.rc">
@@ -159,6 +165,9 @@
     </None>
     <None Include="Polygon.h">
       <Filter>소스 파일\미사용</Filter>
+    </None>
+    <None Include="LightShader.hlsl">
+      <Filter>리소스 파일</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

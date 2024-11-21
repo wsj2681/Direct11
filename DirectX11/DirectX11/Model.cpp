@@ -6,23 +6,35 @@ Model::Model(ComPtr<ID3D11Device>& device, ComPtr<ID3D11DeviceContext>& devcon, 
 {
     vector<ModelVertex> vertices;
     vector<UINT> indices;
+    
+    LoadFBX(objFile, vertices, indices);
+    rotation.x = -90.f;
 
-    if (objFile.back() == 'j')// *.obj
-    {
-        string path = "Resource\\orkobj.png";
-        LoadOBJ("Resource\\orkobj.obj", "Resource\\orkobj.mtl", vertices, indices, path);
-    }
-    else if(objFile.back() == 'x') // *.fbx
-    {
-        LoadFBX(objFile, vertices, indices);
-        rotation.x = -90.f;
-        XMMATRIX rotationMatrix = XMMatrixRotationRollPitchYaw(rotation.x, rotation.y, rotation.z);
-        worldMatrix = rotationMatrix * XMMatrixTranslation(0.f, 0.f, 0.f);
-    }
-
+    XMMATRIX rotationMatrix = XMMatrixRotationRollPitchYaw(rotation.x, rotation.y, rotation.z);
+    worldMatrix = rotationMatrix * XMMatrixTranslation(0.f, 0.f, 0.f);
     modelMesh = new Mesh<ModelVertex>(device, vertices, indices);
     shader = new TextureShader(device, devcon, vsPath, psPath, textureFile);
     shader->SetConstantBuffer(device);
+    lightShader = new LightShader();
+    lightShader->SetConstantBuffer(device);
+}
+
+Model::Model(ComPtr<ID3D11Device>& device, ComPtr<ID3D11DeviceContext>& devcon, const string& objFile, const string& mtlFile, const string& vsPath, const string& psPath, const string& textureFile)
+{
+    vector<ModelVertex> vertices;
+    vector<UINT> indices;
+
+    string path = textureFile;
+    LoadOBJ(objFile, "Resource\\orkobj.mtl", vertices, indices, path);
+    rotation.y = 90.f;
+
+    XMMATRIX rotationMatrix = XMMatrixRotationRollPitchYaw(rotation.x, rotation.y, rotation.z);
+    worldMatrix = rotationMatrix * XMMatrixTranslation(0.f, 0.f, 0.f);
+    modelMesh = new Mesh<ModelVertex>(device, vertices, indices);
+    shader = new TextureShader(device, devcon, vsPath, psPath, textureFile);
+    shader->SetConstantBuffer(device);
+    lightShader = new LightShader();
+    lightShader->SetConstantBuffer(device);
 }
 
 Model::~Model()
@@ -33,7 +45,7 @@ Model::~Model()
 
 void Model::Update()
 {
-	rotation.y += 0.01f;
+	rotation.y += 0.005f;
 	XMMATRIX rotationMatrix = XMMatrixRotationRollPitchYaw(rotation.x, rotation.y, rotation.z);
 	worldMatrix = rotationMatrix * XMMatrixTranslation(0.f, 0.f, 0.f);
 }
@@ -41,11 +53,11 @@ void Model::Update()
 void Model::Render(ComPtr<ID3D11DeviceContext>& devcon, const XMMATRIX& view, const XMMATRIX& projection)
 {
 	shader->UpdateConstantBuffer(devcon, worldMatrix, view, projection);
+    lightShader->UpdateConstantBuffer(devcon, { 0.0f, 0.0f, -3.0f });
 	shader->Bind(devcon);
-
+    lightShader->Bind(devcon);
     modelMesh->Render(devcon);
 }
-
 
 void Model::LoadOBJ(const string& objFile, const string& mtlBasePath, vector<ModelVertex>& vertices, vector<UINT>& indices, string& textureFile)
 {

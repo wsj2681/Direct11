@@ -121,7 +121,7 @@ void DX11Device::ClearBackBuffer()
 {
 	devcon->OMSetRenderTargets(1, rtv.GetAddressOf(), dsv.Get());
 
-	float clearColor[4] = { 1.f, 1.f, 1.f, 1.f };
+	float clearColor[4] = { 0.f, 0.f, 0.4f, 1.f };
 	devcon->ClearRenderTargetView(rtv.Get(), clearColor);
 	devcon->ClearDepthStencilView(dsv.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 }

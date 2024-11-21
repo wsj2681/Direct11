@@ -11,7 +11,7 @@ Scene::Scene(HWND hWnd)
 	);
 
 	model = new Model(device.get()->GetDevice(),device.get()->GetDeviceContext(), 
-		"Resource\\orkobj.obj", "textureShader.hlsl", "textureShader.hlsl", "Resource\\orkobj.jpg");
+		"Resource\\orkobj.obj", "Resource\\orkobj.mtl", "LightShader.hlsl", "LightShader.hlsl", "Resource\\orkobj.jpg");
 }
 
 Scene::~Scene()

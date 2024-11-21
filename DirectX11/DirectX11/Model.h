@@ -2,6 +2,7 @@
 #include "Mesh.h"
 #include "Shader.h"
 #include "TextureShader.h"
+#include "LightShader.h"
 
 #pragma warning(push)
 #pragma warning(disable : 26495)
@@ -18,8 +19,14 @@ class Model
 public:
 
     Model() = default;
+
+    // .fbx 葛胆 积己
     Model(ComPtr<ID3D11Device>& device, ComPtr<ID3D11DeviceContext>& devcon, 
-        const string& objFile, const string& vsPath, const string& psPath, const string& textureFile);
+        const string& fbxFile, const string& vsPath, const string& psPath, const string& textureFile);
+
+    // .obj 葛胆 积己
+    Model(ComPtr<ID3D11Device>& device, ComPtr<ID3D11DeviceContext>& devcon,
+        const string& objFile, const string& mtlFile, const string& vsPath, const string& psPath, const string& textureFile);
 
     ~Model();
 
@@ -34,6 +41,7 @@ private:
 
     Mesh<ModelVertex>* modelMesh = nullptr;
     Shader* shader = nullptr;
+    LightShader* lightShader = nullptr;
     XMMATRIX worldMatrix = XMMatrixIdentity();
     XMFLOAT3 rotation = { 0.f, 0.f, 0.f };
 
