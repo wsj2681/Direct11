@@ -102,6 +102,7 @@ LRESULT CALLBACK Core::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lP
     case WM_LBUTTONUP:
     case WM_RBUTTONDOWN:
     case WM_RBUTTONUP:
+    case WM_MBUTTONDOWN:
     case WM_MOUSEMOVE:
     case WM_KEYDOWN:
     case WM_KEYUP:

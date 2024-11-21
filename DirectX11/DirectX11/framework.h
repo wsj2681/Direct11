@@ -21,6 +21,7 @@
 #include <DirectXMath.h>
 #include <dxgi1_6.h>
 #include <wrl/client.h>
+#include <DirectXCollision.h>
 #include <cstdint>
 #include <stdexcept>
 #include <iostream>

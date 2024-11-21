@@ -2,6 +2,7 @@
 #include "Scene.h"
 
 Scene::Scene(HWND hWnd)
+	:hWnd(hWnd)
 {
 	device = make_unique<DX11Device>(hWnd);
 	camera = make_unique<Camera>(
@@ -28,7 +29,7 @@ void Scene::Render()
 	// Object Update
 	if (model)
 	{
-		model->Update();
+		//model->Update();
 	}
 
 	// Object Draw
@@ -57,13 +58,18 @@ void Scene::OnProcessingMouseMessage(HWND hWnd, UINT nMessageID, WPARAM wParam, 
 		GetCursorPos(&currentMousePosition);
 		ScreenToClient(hWnd, &currentMousePosition);
 
-		int deltaX = currentMousePosition.x - lastMousePosition.x;
-		int deltaY = currentMousePosition.y - lastMousePosition.y;
-
-		if (wParam & MK_LBUTTON)
+		if (wParam & MK_MBUTTON) // 가운데 버튼 눌린 상태에서 움직임 감지
 		{
-			camera->Rotate(deltaX * 0.005f, deltaY * 0.005f);
+			int deltaX = currentMousePosition.x - lastMousePosition.x;
+			int deltaY = currentMousePosition.y - lastMousePosition.y;
+
+			// 모델 회전 적용
+			if (model && IsMouseOverModel(hWnd, currentMousePosition.x, currentMousePosition.y))
+			{
+				model->Rotate(deltaX * 0.005f, deltaY * 0.005f);
+			}
 		}
+
 		lastMousePosition = currentMousePosition;
 	}
 		break;
@@ -123,6 +129,35 @@ void Scene::OnProcessingKeyBoardMessage(HWND hWnd, UINT nMessageID, WPARAM wPara
 	default: 
 		break;
 	}
+}
+
+bool Scene::IsMouseOverModel(HWND hWnd, int mouseX, int mouseY)
+{
+	RECT rect;
+	GetClientRect(hWnd, &rect);
+	int screenWidth = rect.right - rect.left;
+	int screenHeight = rect.bottom - rect.top;
+
+	// 뷰 행렬과 투영 행렬 가져오기
+	XMMATRIX viewMatrix = camera->GetViewMatrix();
+	XMMATRIX projectionMatrix = camera->GetProjectionMatrix();
+
+	// 마우스 위치를 Normalized Device Coordinates로 변환
+	float ndcX = (2.0f * mouseX / screenWidth - 1.0f);
+	float ndcY = (1.0f - 2.0f * mouseY / screenHeight);
+
+	// Ray의 시작점과 방향 계산
+	XMVECTOR rayStart = XMVector3TransformCoord(
+		XMVectorSet(ndcX, ndcY, 0.0f, 1.0f),
+		XMMatrixInverse(nullptr, projectionMatrix * viewMatrix));
+	XMVECTOR rayEnd = XMVector3TransformCoord(
+		XMVectorSet(ndcX, ndcY, 1.0f, 1.0f),
+		XMMatrixInverse(nullptr, projectionMatrix * viewMatrix));
+
+	XMVECTOR rayDir = XMVector3Normalize(rayEnd - rayStart);
+
+	// 모델의 경계와 충돌 확인
+	return model->CheckRayIntersection(rayStart, rayDir);
 }
 
 LRESULT Scene::OnProcessingWindowMessage(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lParam)

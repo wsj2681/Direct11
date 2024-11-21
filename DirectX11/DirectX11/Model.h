@@ -33,6 +33,9 @@ public:
     void Update();
     void Render(ComPtr<ID3D11DeviceContext>& devcon, const XMMATRIX& view, const XMMATRIX& projection);
 
+    void Rotate(float deltaX, float deltaY);
+    bool CheckRayIntersection(const XMVECTOR& rayOrigin, const XMVECTOR& rayDirection);
+
 private:
 
     void LoadOBJ(const string& objFile, const string& mtlBasePath, vector<ModelVertex>& vertices, vector<UINT>& indices, string& textureFile);
@@ -45,5 +48,6 @@ private:
     XMMATRIX worldMatrix = XMMatrixIdentity();
     XMFLOAT3 rotation = { 0.f, 0.f, 0.f };
 
+    BoundingBox boundingBox;
 };
 

@@ -5,7 +5,7 @@ Camera::Camera()
 {
 	position = { 0.f, 0.f, 0.f };
 	target = { 0.f, 0.f, 0.f };
-	upVector = { 0.f, 0.f, 0.f };
+	upVector = { 0.f, 1.f, 0.f };
 
 	viewMatrix = XMMatrixLookAtLH(
 		XMVectorSet(position.x, position.y, position.z, 1.0f),
@@ -46,6 +46,7 @@ void Camera::Move(const XMFLOAT3& direction, float deltaTime)
 	XMVECTOR movement = XMVectorZero();
 	movement += XMVectorScale(forward, direction.z);
 	movement += XMVectorScale(right, direction.x);
+	movement += XMVectorScale(XMLoadFloat3(&upVector), direction.y);
 
 	XMVECTOR newPosition = XMLoadFloat3(&position) + movement * moveSpeed * deltaTime;
 	XMStoreFloat3(&position, newPosition);

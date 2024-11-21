@@ -35,6 +35,10 @@ Model::Model(ComPtr<ID3D11Device>& device, ComPtr<ID3D11DeviceContext>& devcon, 
     shader->SetConstantBuffer(device);
     lightShader = new LightShader();
     lightShader->SetConstantBuffer(device);
+
+    BoundingBox::CreateFromPoints(boundingBox, vertices.size(),
+        reinterpret_cast<const XMFLOAT3*>(vertices.data()), sizeof(ModelVertex));
+
 }
 
 Model::~Model()
@@ -57,6 +61,27 @@ void Model::Render(ComPtr<ID3D11DeviceContext>& devcon, const XMMATRIX& view, co
 	shader->Bind(devcon);
     lightShader->Bind(devcon);
     modelMesh->Render(devcon);
+}
+
+void Model::Rotate(float deltaX, float deltaY)
+{
+    // 마우스 이동량에 따라 회전 값을 업데이트
+    rotation.y -= deltaX; // 수평 회전
+    rotation.x += deltaY; // 수직 회전
+
+    // 회전 행렬 갱신
+    XMMATRIX rotationMatrix = XMMatrixRotationRollPitchYaw(rotation.x, rotation.y, rotation.z);
+    worldMatrix = rotationMatrix * XMMatrixTranslation(0.f, 0.f, 0.f);
+}
+
+bool Model::CheckRayIntersection(const XMVECTOR& rayOrigin, const XMVECTOR& rayDirection)
+{
+    float dist = 0.0f;
+    if (boundingBox.Intersects(rayOrigin, rayDirection, dist))
+    {
+        return true;
+    }
+    return false;
 }
 
 void Model::LoadOBJ(const string& objFile, const string& mtlBasePath, vector<ModelVertex>& vertices, vector<UINT>& indices, string& textureFile)
