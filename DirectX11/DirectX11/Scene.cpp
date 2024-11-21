@@ -13,6 +13,8 @@ Scene::Scene(HWND hWnd)
 
 	model = new Model(device.get()->GetDevice(),device.get()->GetDeviceContext(), 
 		"Resource\\orkobj.obj", "Resource\\orkobj.mtl", "LightShader.hlsl", "LightShader.hlsl", "Resource\\orkobj.jpg");
+
+	model->Move(-1.f, 0.f, 0.f);
 }
 
 Scene::~Scene()

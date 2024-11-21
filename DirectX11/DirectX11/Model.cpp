@@ -65,13 +65,27 @@ void Model::Render(ComPtr<ID3D11DeviceContext>& devcon, const XMMATRIX& view, co
 
 void Model::Rotate(float deltaX, float deltaY)
 {
-    // 마우스 이동량에 따라 회전 값을 업데이트
     rotation.y -= deltaX; // 수평 회전
     rotation.x += deltaY; // 수직 회전
 
-    // 회전 행렬 갱신
+    // 회전 후 이동을 적용
     XMMATRIX rotationMatrix = XMMatrixRotationRollPitchYaw(rotation.x, rotation.y, rotation.z);
-    worldMatrix = rotationMatrix * XMMatrixTranslation(0.f, 0.f, 0.f);
+    XMMATRIX translationMatrix = XMMatrixTranslation(position.x, position.y, position.z);
+
+    worldMatrix = rotationMatrix * translationMatrix;
+}
+
+void Model::Move(float deltaX, float deltaY, float deltaZ)
+{
+    position.x += deltaX;
+    position.y += deltaY;
+    position.z += deltaZ;
+
+    // 위치 업데이트
+    XMMATRIX translationMatrix = XMMatrixTranslation(position.x, position.y, position.z);
+    XMMATRIX rotationMatrix = XMMatrixRotationRollPitchYaw(rotation.x, rotation.y, rotation.z);
+
+    worldMatrix = rotationMatrix * translationMatrix;
 }
 
 bool Model::CheckRayIntersection(const XMVECTOR& rayOrigin, const XMVECTOR& rayDirection)
