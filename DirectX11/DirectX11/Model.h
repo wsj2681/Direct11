@@ -21,6 +21,7 @@ public:
 private:
 
     void LoadOBJ(const string& objFile, vector<ModelVertex>& vertices, vector<UINT>& indices);
+    void LoadOBJ(const string& objFile, const string& mtlBasePath, vector<ModelVertex>& vertices, vector<UINT>& indices, string& textureFile);
     void LoadFBX(const string& fbxFile, vector<ModelVertex>& vertices, vector<UINT>& indices);
     void ProcessMesh(FbxMesh* mesh, vector<ModelVertex>& vertices, vector<UINT>& indices);
 

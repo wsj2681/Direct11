@@ -139,11 +139,14 @@
   <ItemGroup>
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Core.h" />
+    <ClInclude Include="DDSTextureLoader11.h" />
     <ClInclude Include="DirectX11.h" />
     <ClInclude Include="DX11Device.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="Model.h" />
+    <ClInclude Include="tiny_obj_loader.h" />
+    <ClInclude Include="WICTextureLoader11.h" />
     <None Include="Polygon.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
@@ -157,10 +160,13 @@
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Core.cpp" />
+    <ClCompile Include="DDSTextureLoader11.cpp" />
     <ClCompile Include="DX11Device.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="Model.cpp" />
+    <ClCompile Include="tiny_obj_loader.cc" />
+    <ClCompile Include="WICTextureLoader11.cpp" />
     <None Include="Polygon.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>

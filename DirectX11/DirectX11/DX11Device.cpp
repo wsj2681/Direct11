@@ -98,7 +98,7 @@ void DX11Device::Initialize(HWND hWnd)
 	D3D11_RASTERIZER_DESC rasterdesc = {};
 	rasterdesc.FillMode = D3D11_FILL_SOLID;
 	rasterdesc.CullMode = D3D11_CULL_BACK;
-	//rasterdesc.FrontCounterClockwise = false;
+	rasterdesc.FrontCounterClockwise = false;
 
 	ComPtr<ID3D11RasterizerState> rasterState;
 	HR(device->CreateRasterizerState(&rasterdesc, rasterState.GetAddressOf()));

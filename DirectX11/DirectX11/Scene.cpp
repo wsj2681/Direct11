@@ -5,12 +5,13 @@ Scene::Scene(HWND hWnd)
 {
 	device = make_unique<DX11Device>(hWnd);
 	camera = make_unique<Camera>(
-		XMFLOAT3(0.0f, 2.0f, -20.0f), // Position
+		XMFLOAT3(0.0f, 0.0f, -3.0f), // Position
 		XMFLOAT3(0.0f, 0.0f, 0.0f),  // LookAt
 		XMFLOAT3(0.0f, 1.0f, 0.0f)   // UpVector
 	);
 
-	model = new Model(device.get()->GetDevice(),device.get()->GetDeviceContext(), "baseball.fbx", "textureShader.hlsl", "textureShader.hlsl", "baseball.png");
+	model = new Model(device.get()->GetDevice(),device.get()->GetDeviceContext(), 
+		"Resource\\orkobj.obj", "textureShader.hlsl", "textureShader.hlsl", "Resource\\orkobj.jpg");
 }
 
 Scene::~Scene()

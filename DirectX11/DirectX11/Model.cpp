@@ -1,4 +1,5 @@
 #include "framework.h"
+#include "tiny_obj_loader.h"
 #include "Model.h"
 
 Model::Model(ComPtr<ID3D11Device>& device, ComPtr<ID3D11DeviceContext>& devcon, const string& objFile, const string& vsPath, const string& psPath, const string& textureFile)
@@ -7,16 +8,23 @@ Model::Model(ComPtr<ID3D11Device>& device, ComPtr<ID3D11DeviceContext>& devcon, 
     vector<UINT> indices;
     if (objFile.back() == 'j')// *.obj
     {
-        LoadOBJ(objFile, vertices, indices);
+        //LoadOBJ(objFile, vertices, indices);
+        string path = "Resource\\orkobj.png";
+        LoadOBJ("Resource\\orkobj.obj", "Resource\\orkobj.mtl", vertices, indices, path);
     }
     else if(objFile.back() == 'x') // *.fbx
     {
         LoadFBX(objFile, vertices, indices);
+        rotation.x = -90.f;
+        XMMATRIX rotationMatrix = XMMatrixRotationRollPitchYaw(rotation.x, rotation.y, rotation.z);
+        worldMatrix = rotationMatrix * XMMatrixTranslation(0.f, 0.f, 0.f);
     }
 
     modelMesh = new Mesh<ModelVertex>(device, vertices, indices);
     shader = new TextureShader(device, devcon, vsPath, psPath, textureFile);
     shader->SetConstantBuffer(device);
+
+
 }
 
 Model::~Model()
@@ -147,6 +155,73 @@ void Model::LoadOBJ(const string& objFile, vector<ModelVertex>& vertices, vector
     file.close();
 }
 
+void Model::LoadOBJ(const string& objFile, const string& mtlBasePath, vector<ModelVertex>& vertices, vector<UINT>& indices, string& textureFile)
+{
+    tinyobj::attrib_t attrib;
+    std::vector<tinyobj::shape_t> shapes;
+    std::vector<tinyobj::material_t> materials;
+    std::string warn, err;
+
+    if (!tinyobj::LoadObj(&attrib, &shapes, &materials, &warn, &err, objFile.c_str(), mtlBasePath.c_str())) 
+    {
+        std::cerr << "Failed to load OBJ file: " << warn << err << std::endl;
+        return;
+    }
+
+    // Process materials
+    if (!materials.empty()) 
+    {
+        textureFile = materials[0].diffuse_texname; // Assuming single material
+    }
+
+    // Process shapes
+    for (const auto& shape : shapes) 
+    {
+        size_t indexOffset = 0;
+
+        for (size_t f = 0; f < shape.mesh.num_face_vertices.size(); ++f) 
+        {
+            size_t fv = shape.mesh.num_face_vertices[f];
+            for (size_t v = 0; v < fv; ++v) 
+            {
+                tinyobj::index_t idx = shape.mesh.indices[indexOffset + v];
+
+                // Positions
+                XMFLOAT3 position(
+                    attrib.vertices[3 * idx.vertex_index + 0],
+                    attrib.vertices[3 * idx.vertex_index + 1],
+                    attrib.vertices[3 * idx.vertex_index + 2]);
+
+                // Normals
+                XMFLOAT3 normal(0, 0, 0);
+                if (idx.normal_index >= 0) 
+                {
+                    normal = XMFLOAT3(
+                        attrib.normals[3 * idx.normal_index + 0],
+                        attrib.normals[3 * idx.normal_index + 1],
+                        attrib.normals[3 * idx.normal_index + 2]);
+                }
+
+                // Texture coordinates
+                XMFLOAT2 texcoord(0, 0);
+                if (idx.texcoord_index >= 0) 
+                {
+                    texcoord = XMFLOAT2(
+                        attrib.texcoords[2 * idx.texcoord_index + 0],
+                        attrib.texcoords[2 * idx.texcoord_index + 1]);
+                }
+
+                // Add vertex
+                vertices.push_back({ position, normal, texcoord });
+                indices.push_back(static_cast<uint32_t>(indices.size()));
+            }
+            indexOffset += fv;
+        }
+    }
+
+    return;
+}
+
 
 void Model::LoadFBX(const string& fbxFile, vector<ModelVertex>& vertices, vector<UINT>& indices)
 {
@@ -167,6 +242,7 @@ void Model::LoadFBX(const string& fbxFile, vector<ModelVertex>& vertices, vector
         return;
     }
 
+
     FbxScene* scene = FbxScene::Create(manager, "Scene");
     if (!importer->Import(scene))
     {
@@ -177,6 +253,9 @@ void Model::LoadFBX(const string& fbxFile, vector<ModelVertex>& vertices, vector
 
     FbxGeometryConverter geometryConverter(manager);
     geometryConverter.Triangulate(scene, true);
+
+    FbxAxisSystem directXAxisSystem(FbxAxisSystem::eDirectX);
+    directXAxisSystem.ConvertScene(scene);
 
     FbxNode* rootNode = scene->GetRootNode();
     if (rootNode)
@@ -240,11 +319,13 @@ void Model::ProcessMesh(FbxMesh* mesh, vector<ModelVertex>& vertices, vector<UIN
             {
                 FbxVector2 fbxUV;
                 bool unmapped;
-                mesh->GetPolygonVertexUV(polygonIndex, vertexIndex, uvSetNameList[0], fbxUV, unmapped);
-                texcoord = XMFLOAT2(
-                    static_cast<float>(fbxUV[0]),
-                    static_cast<float>(fbxUV[1])
-                );
+                if (mesh->GetPolygonVertexUV(polygonIndex, vertexIndex, uvSetNameList[0], fbxUV, unmapped))
+                {
+                    texcoord = XMFLOAT2(
+                        static_cast<float>(fbxUV[0]),
+                        static_cast<float>(fbxUV[1])
+                    );
+                }
             }
 
             // Create and store the vertex

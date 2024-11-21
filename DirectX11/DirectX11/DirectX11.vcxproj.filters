@@ -83,6 +83,15 @@
     <ClInclude Include="TextureShader.h">
       <Filter>소스 파일\03.Model\02.Shader</Filter>
     </ClInclude>
+    <ClInclude Include="tiny_obj_loader.h">
+      <Filter>소스 파일\99.Common</Filter>
+    </ClInclude>
+    <ClInclude Include="DDSTextureLoader11.h">
+      <Filter>소스 파일\99.Common</Filter>
+    </ClInclude>
+    <ClInclude Include="WICTextureLoader11.h">
+      <Filter>소스 파일\99.Common</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -111,6 +120,15 @@
     </ClCompile>
     <ClCompile Include="TextureShader.cpp">
       <Filter>소스 파일\03.Model\02.Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="tiny_obj_loader.cc">
+      <Filter>소스 파일\99.Common</Filter>
+    </ClCompile>
+    <ClCompile Include="DDSTextureLoader11.cpp">
+      <Filter>소스 파일\99.Common</Filter>
+    </ClCompile>
+    <ClCompile Include="WICTextureLoader11.cpp">
+      <Filter>소스 파일\99.Common</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

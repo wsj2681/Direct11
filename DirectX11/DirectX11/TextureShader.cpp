@@ -1,3 +1,5 @@
+#include "WICTextureLoader11.h"
+#include "DDSTextureLoader11.h"
 #include "TextureShader.h"
 
 TextureShader::TextureShader(ComPtr<ID3D11Device>& device, ComPtr<ID3D11DeviceContext>& devcon, const string& vsPath, const string& psPath, const string& textureFile)
@@ -12,12 +14,20 @@ TextureShader::TextureShader(ComPtr<ID3D11Device>& device, ComPtr<ID3D11DeviceCo
 	HR(D3DCompileFromFile(TOWSTRING(psPath), nullptr, nullptr, "PSMain", "ps_5_0", 0, 0, psBlob.GetAddressOf(), nullptr));
 	HR(device->CreatePixelShader(psBlob->GetBufferPointer(), psBlob->GetBufferSize(), nullptr, pixelShader.GetAddressOf()));
 
-	LoadTexture(device, textureFile);
-
+	//LoadTexture(device, textureFile);
+	if (textureFile.back() == 'g' || textureFile.back() == 'G')
+	{
+		CreateWICTextureFromFile(device.Get(), TOWSTRING(textureFile), nullptr, textureView.GetAddressOf());
+	}
+	else if (textureFile.back() == 's' || textureFile.back() == 'S')
+	{
+		CreateDDSTextureFromFile(device.Get(), TOWSTRING(textureFile), nullptr, textureView.GetAddressOf());
+	}
 	D3D11_INPUT_ELEMENT_DESC layout[] =
 	{
 		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 }
+		{ "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 24, D3D11_INPUT_PER_VERTEX_DATA, 0 }
 	};
 	HR(device->CreateInputLayout(layout, ARRAYSIZE(layout), vsBlob->GetBufferPointer(), vsBlob->GetBufferSize(), inputLayout.GetAddressOf()));
 
