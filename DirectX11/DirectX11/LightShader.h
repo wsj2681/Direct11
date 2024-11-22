@@ -1,7 +1,7 @@
 #pragma once
 #include "Shader.h"
 
-struct LightConstantBuffer
+struct alignas(16) LightConstantBuffer
 {
 	XMFLOAT3 direction;
 	float padding1;
@@ -11,6 +11,8 @@ struct LightConstantBuffer
 	float padding3;
 	XMFLOAT3 cameraPosition;
 	float padding4;
+	float shinness;
+	float padding5[3];
 };
 
 class LightShader : public Shader
@@ -20,7 +22,7 @@ public:
 	~LightShader() = default;
 
 	void SetConstantBuffer(ComPtr<ID3D11Device>& device) override;
-	void UpdateConstantBuffer(ComPtr<ID3D11DeviceContext>& devcon, const XMFLOAT3& cameraPosition);
+	void UpdateConstantBuffer(ComPtr<ID3D11DeviceContext>& devcon, const XMFLOAT3& cameraPosition, const float& shinness);
 	void Bind(ComPtr<ID3D11DeviceContext>& devcon) override;
 
 	void SetLightDirection(const XMFLOAT3& dir);

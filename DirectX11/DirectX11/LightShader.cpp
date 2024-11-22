@@ -18,13 +18,15 @@ void LightShader::SetConstantBuffer(ComPtr<ID3D11Device>& device)
 	HR(device->CreateBuffer(&cbDesc, nullptr, LightconstantBuffer.GetAddressOf()));
 }
 
-void LightShader::UpdateConstantBuffer(ComPtr<ID3D11DeviceContext>& devcon, const XMFLOAT3& cameraPosition)
+void LightShader::UpdateConstantBuffer(ComPtr<ID3D11DeviceContext>& devcon, const XMFLOAT3& cameraPosition, const float& shinness)
 {
 	LightConstantBuffer cb = {};
 	cb.direction = direction;
 	cb.color = color;
 	cb.ambientColor = ambient;
 	cb.cameraPosition = cameraPosition;
+	cb.shinness = 1.0f;
+
 	devcon->UpdateSubresource(LightconstantBuffer.Get(), 0, nullptr, &cb, 0, 0);
 }
 

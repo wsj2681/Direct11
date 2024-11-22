@@ -31,12 +31,14 @@ public:
     ~Model();
 
     void Update();
-    void Render(ComPtr<ID3D11DeviceContext>& devcon, const XMMATRIX& view, const XMMATRIX& projection);
+    void Render(ComPtr<ID3D11DeviceContext>& devcon, const XMMATRIX& view, const XMMATRIX& projection, const float& shinness = 1.0f);
 
     void Rotate(float deltaX, float deltaY);
     void Move(float deltaX, float deltaY, float deltaZ);
 
     bool CheckRayIntersection(const XMVECTOR& rayOrigin, const XMVECTOR& rayDirection);
+
+    LightShader* lightShader = nullptr;
 
 private:
 
@@ -46,7 +48,6 @@ private:
 
     Mesh<ModelVertex>* modelMesh = nullptr;
     Shader* shader = nullptr;
-    LightShader* lightShader = nullptr;
     XMMATRIX worldMatrix = XMMatrixIdentity();
     XMFLOAT3 rotation = { 0.f, 0.f, 0.f };
     XMFLOAT3 position = { 0.f, 0.f, 0.f };

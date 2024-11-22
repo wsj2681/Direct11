@@ -1,8 +1,6 @@
 #pragma once
 #include "Shader.h"
 
-
-
 class TextureShader : public Shader
 {
 public:
@@ -18,6 +16,5 @@ private:
 
 	ComPtr<ID3D11ShaderResourceView> textureView;
 	ComPtr<ID3D11SamplerState> samplerstate;
-
 };
 

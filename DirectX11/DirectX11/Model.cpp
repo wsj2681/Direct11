@@ -25,7 +25,7 @@ Model::Model(ComPtr<ID3D11Device>& device, ComPtr<ID3D11DeviceContext>& devcon, 
     vector<UINT> indices;
 
     string path = textureFile;
-    LoadOBJ(objFile, "Resource\\orkobj.mtl", vertices, indices, path);
+    LoadOBJ(objFile, mtlFile, vertices, indices, path);
     rotation.y = 90.f;
 
     XMMATRIX rotationMatrix = XMMatrixRotationRollPitchYaw(rotation.x, rotation.y, rotation.z);
@@ -54,10 +54,10 @@ void Model::Update()
 	worldMatrix = rotationMatrix * XMMatrixTranslation(0.f, 0.f, 0.f);
 }
 
-void Model::Render(ComPtr<ID3D11DeviceContext>& devcon, const XMMATRIX& view, const XMMATRIX& projection)
+void Model::Render(ComPtr<ID3D11DeviceContext>& devcon, const XMMATRIX& view, const XMMATRIX& projection, const float& shinness)
 {
 	shader->UpdateConstantBuffer(devcon, worldMatrix, view, projection);
-    lightShader->UpdateConstantBuffer(devcon, { 0.0f, 0.0f, -3.0f });
+    lightShader->UpdateConstantBuffer(devcon, { 0.0f, 0.0f, -3.0f }, shinness);
 	shader->Bind(devcon);
     lightShader->Bind(devcon);
     modelMesh->Render(devcon);

@@ -38,7 +38,7 @@ cbuffer LightBuffer : register(b1)
 	float3 lightDirection; // 광원 방향
 	float3 lightColor; // 광원 색상
 	float3 ambientColor; // 환경광 색상
-	int lightenable; // 조명 on/off
+	float shinness; // 샤이니니스
 };
 
 Texture2D myTexture : register(t0);

@@ -21,11 +21,16 @@ Scene::Scene(HWND hWnd)
 	ImGui::CreateContext();
 	ImGuiIO& io = ImGui::GetIO();
 	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
+	io.DisplaySize = ImVec2(static_cast<float>(FRAMEBUFFER_WIDTH), static_cast<float>(FRAMEBUFFER_HEIGHT));
+	float dpiScale = ImGui_ImplWin32_GetDpiScaleForHwnd(hWnd);
+	io.DisplayFramebufferScale = ImVec2(dpiScale, dpiScale);
 
 	// ImGui 백엔드 설정
 	ImGui_ImplWin32_Init(hWnd);
 	ImGui_ImplDX11_Init(device->GetDevice().Get(), device->GetDeviceContext().Get());
 	ImGui::StyleColorsDark(); // 다크 테마 적용
+
+	ImGui_ImplWin32_EnableDpiAwareness();
 }
 
 Scene::~Scene()
@@ -40,6 +45,9 @@ Scene::~Scene()
 
 void Scene::Render()
 {
+	static float sliderValueR = 1.0f;
+	static float sliderValueG = 1.0f;
+	static float sliderValueB = 1.0f;
 	device->ClearBackBuffer();
 
 	// Object Update
@@ -51,7 +59,7 @@ void Scene::Render()
 	// Object Draw
 	if (model)
 	{
-		model->Render(device->GetDeviceContext(), camera->GetViewMatrix(), camera->GetProjectionMatrix());
+		model->Render(device->GetDeviceContext(), camera->GetViewMatrix(), camera->GetProjectionMatrix(), 1.0f);
 	}
 
 
@@ -63,17 +71,22 @@ void Scene::Render()
 	// UI 요소 그리기
 	ImGui::Begin("Example UI");
 	ImGui::Text("Hello, ImGui!");
-	static float sliderValue = 0.5f;
-	ImGui::SliderFloat("Slider", &sliderValue, 0.0f, 1.0f);
+	ImGui::SliderFloat("SliderR", &sliderValueR, 0.1f, 1.0f);
+	ImGui::SliderFloat("SliderG", &sliderValueG, 0.1f, 1.0f);
+	ImGui::SliderFloat("SliderB", &sliderValueB, 0.1f, 1.0f);
 	if (ImGui::Button("Click Me")) 
 	{
-		std::cout << "Button clicked!" << std::endl;
+		std::cout << sliderValueR << std::endl;
+		std::cout << sliderValueG << std::endl;
+		std::cout << sliderValueB << std::endl;
 	}
 	ImGui::End();
 
 	// ImGui 렌더링
 	ImGui::Render();
 	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
+
+	model->lightShader->SetLightAmbient({ sliderValueR , sliderValueG ,sliderValueB });
 
 	device->Render();
 }
@@ -85,6 +98,21 @@ void Scene::OnProcessingMouseMessage(HWND hWnd, UINT nMessageID, WPARAM wParam, 
 	switch (nMessageID) 
 	{
 	case WM_LBUTTONDOWN:
+	{
+		ImGuiIO& io = ImGui::GetIO();
+		float mouseX = io.MousePos.x; // ImGui의 마우스 X 좌표
+		float mouseY = io.MousePos.y; // ImGui의 마우스 Y 좌표
+
+		// 디스플레이 크기와 비교
+		std::cout << "Mouse Position: (" << mouseX << ", " << mouseY << ")\n";
+		std::cout << "Display Size: (" << io.DisplaySize.x << ", " << io.DisplaySize.y << ")\n";
+
+		GetCursorPos(&currentMousePosition);
+		ScreenToClient(hWnd, &currentMousePosition);
+		std::cout << "Mouse Position: (" << currentMousePosition.x << ", " << currentMousePosition.y << ")\n";
+		std::cout << "Display Size: (" << io.DisplaySize.x << ", " << io.DisplaySize.y << ")\n";
+		break;
+	}
 	case WM_RBUTTONDOWN:
 		break;
 	case WM_LBUTTONUP:
