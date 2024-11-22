@@ -43,6 +43,10 @@ using Microsoft::WRL::ComPtr;
 #pragma comment(lib,"d3d11.lib")
 #pragma comment(lib,"dxgi.lib")
 
+#include "imgui.h"
+#include "imgui_impl_dx11.h"
+#include "imgui_impl_win32.h"
+
 
 
 #define FRAMEBUFFER_WIDTH 800

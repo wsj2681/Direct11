@@ -14,7 +14,18 @@ Scene::Scene(HWND hWnd)
 	model = new Model(device.get()->GetDevice(),device.get()->GetDeviceContext(), 
 		"Resource\\orkobj.obj", "Resource\\orkobj.mtl", "LightShader.hlsl", "LightShader.hlsl", "Resource\\orkobj.jpg");
 
-	model->Move(-1.f, 0.f, 0.f);
+	model->Move(0.f, 0.f, 0.f);
+
+	// ImGui 초기화
+	IMGUI_CHECKVERSION();
+	ImGui::CreateContext();
+	ImGuiIO& io = ImGui::GetIO();
+	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
+
+	// ImGui 백엔드 설정
+	ImGui_ImplWin32_Init(hWnd);
+	ImGui_ImplDX11_Init(device->GetDevice().Get(), device->GetDeviceContext().Get());
+	ImGui::StyleColorsDark(); // 다크 테마 적용
 }
 
 Scene::~Scene()
@@ -22,6 +33,9 @@ Scene::~Scene()
 	model->~Model();
 	camera.release();
 	device.release();
+	ImGui_ImplDX11_Shutdown();
+	ImGui_ImplWin32_Shutdown();
+	ImGui::DestroyContext();
 }
 
 void Scene::Render()
@@ -39,6 +53,27 @@ void Scene::Render()
 	{
 		model->Render(device->GetDeviceContext(), camera->GetViewMatrix(), camera->GetProjectionMatrix());
 	}
+
+
+	// ImGui 프레임 시작
+	ImGui_ImplDX11_NewFrame();
+	ImGui_ImplWin32_NewFrame();
+	ImGui::NewFrame();
+
+	// UI 요소 그리기
+	ImGui::Begin("Example UI");
+	ImGui::Text("Hello, ImGui!");
+	static float sliderValue = 0.5f;
+	ImGui::SliderFloat("Slider", &sliderValue, 0.0f, 1.0f);
+	if (ImGui::Button("Click Me")) 
+	{
+		std::cout << "Button clicked!" << std::endl;
+	}
+	ImGui::End();
+
+	// ImGui 렌더링
+	ImGui::Render();
+	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 
 	device->Render();
 }
