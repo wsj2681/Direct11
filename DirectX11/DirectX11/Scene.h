@@ -21,6 +21,7 @@ private:
 	void OnProcessingMouseMessage(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lParam);
 	void OnProcessingKeyBoardMessage(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lParam);
 	bool IsMouseOverModel(HWND hWnd, int mouseX, int mouseY);
+	const LPWSTR& OpenFileDialog(HWND hWnd);
 
 public:
 	LRESULT OnProcessingWindowMessage(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lParam);

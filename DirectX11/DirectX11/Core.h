@@ -52,3 +52,4 @@ private:
 
     unique_ptr<Scene> scene;
 };
+

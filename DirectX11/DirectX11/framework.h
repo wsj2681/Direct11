@@ -15,6 +15,7 @@
 #include <memory.h>
 #include <tchar.h>
 #include <wincodec.h>
+#include <commdlg.h>
 
 #include <d3d11.h>
 #include <d3dcompiler.h>

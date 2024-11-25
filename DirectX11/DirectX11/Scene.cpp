@@ -69,8 +69,7 @@ void Scene::Render()
 	ImGui::NewFrame();
 
 	// UI 요소 그리기
-	ImGui::Begin("Example UI");
-	ImGui::Text("Hello, ImGui!");
+	ImGui::Begin("Ambient Light Color");
 	ImGui::SliderFloat("SliderR", &sliderValueR, 0.1f, 1.0f);
 	ImGui::SliderFloat("SliderG", &sliderValueG, 0.1f, 1.0f);
 	ImGui::SliderFloat("SliderB", &sliderValueB, 0.1f, 1.0f);
@@ -158,6 +157,9 @@ void Scene::OnProcessingKeyBoardMessage(HWND hWnd, UINT nMessageID, WPARAM wPara
 		case VK_F8:
 			break;
 		case VK_F9:
+		{
+			OpenFileDialog(hWnd);
+		}
 			break;
 		default: 
 			break;
@@ -223,6 +225,33 @@ bool Scene::IsMouseOverModel(HWND hWnd, int mouseX, int mouseY)
 
 	// 모델의 경계와 충돌 확인
 	return model->CheckRayIntersection(rayStart, rayDir);
+}
+
+const LPWSTR& Scene::OpenFileDialog(HWND hWnd)
+{
+	TCHAR szFile[260] = { 0 };
+
+	OPENFILENAME ofn;
+	ZeroMemory(&ofn, sizeof(ofn));
+	ofn.lStructSize = sizeof(ofn);
+	ofn.hwndOwner = hWnd;
+	ofn.lpstrFile = szFile;
+	ofn.nMaxFile = sizeof(szFile) / sizeof(TCHAR);
+	ofn.lpstrFilter = _T("All Files\0*.*\0Text Files\0*.TXT\0");
+	ofn.nFilterIndex = 1;
+	ofn.lpstrInitialDir = NULL;
+	ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
+
+	if (GetOpenFileName(&ofn))
+	{
+		MessageBox(hWnd, ofn.lpstrFile, _T("선택된 파일 경로"), MB_OK);
+	}
+	else
+	{
+		MessageBox(hWnd, _T("파일을 선택하지 않았습니다."), _T("알림"), MB_OK);
+	}
+
+	return ofn.lpstrFile;
 }
 
 LRESULT Scene::OnProcessingWindowMessage(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lParam)
